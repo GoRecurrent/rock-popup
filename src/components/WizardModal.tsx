@@ -181,7 +181,7 @@ const WizardModal = () => {
                 <Button
                   onClick={currentStep === 6 ? handleNext : handleNext}
                   disabled={!isStepValid()}
-                  className="px-8 bg-wizard-progress text-primary hover:bg-wizard-progress/90 border-l-4 border-button-accent"
+                  className="px-8 bg-wizard-sidebar text-white hover:bg-wizard-sidebar/90 border-l-4 border-button-accent"
                 >
                   {currentStep === 6 ? "Submit" : "Next"}
                 </Button>
