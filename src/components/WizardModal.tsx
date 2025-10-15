@@ -150,12 +150,12 @@ const WizardModal = () => {
 
         <div className="flex flex-col md:flex-row h-full">
           {/* Left Sidebar */}
-          <div className="md:w-1/3 bg-wizard-sidebar p-8 md:p-12 flex flex-col items-center justify-center text-primary-foreground">
-            <h1 className="text-2xl md:text-3xl font-semibold mb-4 text-center leading-tight">
+          <div className="md:w-1/3 bg-wizard-sidebar p-8 md:p-12 flex flex-col justify-center text-primary-foreground">
+            <img src="/rock-logo.webp" alt="Rock Academy Logo" className="h-16 w-auto object-contain mb-8 self-start" />
+            <h1 className="text-2xl md:text-3xl font-semibold mb-4 leading-tight text-left">
               Is the Rock Academy the right fit for you?
             </h1>
-            <p className="text-base opacity-90 text-center">Get personalized answers in 30 seconds.</p>
-            <img src="/logo.png" alt="Rock Academy Logo" className="mt-8 h-16 w-auto object-contain" />
+            <p className="text-base opacity-90 text-left">Get personalized answers in 30 seconds.</p>
           </div>
 
           {/* Right Content Area */}
