@@ -46,27 +46,7 @@ const ThankYouPage = ({
 
         <p className="text-xl text-muted-foreground mb-8">We're excited to help you learn more about Rock Academy. We'll reach out shortly to answer any questions and schedule a campus tour.</p>
 
-        <div className="bg-muted rounded-lg p-6 mb-8 w-full text-left space-y-4">
-          <h2 className="text-lg font-semibold text-foreground mb-4">Your Personalized Summary:</h2>
-          
-          <div className="space-y-3 text-sm text-foreground">
-            <div>
-              <span className="font-medium">Primary Interest:</span> {formData.step1}
-            </div>
-            <div>
-              <span className="font-medium">Main Concern:</span> {formData.step2}
-            </div>
-            <div>
-              <span className="font-medium">Students:</span>{" "}
-              {formData.step3.map((child, index) => <span key={index}>
-                  {child.name} ({child.gradeLevel}){index < formData.step3.length - 1 ? ", " : ""}
-                </span>)}
-            </div>
-            <div>
-              <span className="font-medium">Enrollment Year:</span> 2026-2027
-            </div>
-          </div>
-        </div>
+        
 
         {messages.length > 0 && <div className="bg-accent/10 border border-accent/20 rounded-lg p-6 mb-8 w-full text-left space-y-4">
             <h3 className="text-lg font-semibold text-foreground">Based on your responses:</h3>
