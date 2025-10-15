@@ -161,7 +161,7 @@ const WizardModal = () => {
               </div>
             )}
 
-            <div className="flex-1 overflow-y-auto p-6 md:p-8">{renderStep()}</div>
+            <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col">{renderStep()}</div>
 
             {currentStep < 6 && (
               <div className="p-6 border-t border-border flex justify-between gap-4">

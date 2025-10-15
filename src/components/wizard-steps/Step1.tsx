@@ -33,12 +33,13 @@ const Step1 = ({ value, onChange, onAutoAdvance }: Step1Props) => {
       </div>
 
       <RadioGroup value={value} onValueChange={handleSelect} className="space-y-3">
-        {options.map((option) => (
+        {options.map((option, index) => (
           <div
             key={option}
             className={`flex items-center space-x-3 p-4 rounded-lg border-2 transition-colors cursor-pointer ${
               value === "" ? "border-border animate-[shimmer_2s_ease-in-out_infinite]" : "border-border hover:border-primary"
             }`}
+            style={value === "" ? { animationDelay: `${index * 0.2}s` } : {}}
             onClick={() => handleSelect(option)}
           >
             <RadioGroupItem value={option} id={option} />

@@ -15,7 +15,6 @@ interface Step4Props {
 
 const Step4 = ({ value, onChange }: Step4Props) => {
   const gradeLevels = [
-    "Transitional Kindergarten",
     "Pre-K",
     "Kindergarten",
     "1st Grade",
@@ -47,44 +46,43 @@ const Step4 = ({ value, onChange }: Step4Props) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 flex flex-col h-full">
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">
           What is the name and grade level of your student(s) for 2026-2027 school year?
         </h2>
-        <p className="text-muted-foreground">Add each child you're considering enrolling.</p>
+        <p className="text-muted-foreground">Add each student you're considering enrolling.</p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 overflow-y-auto flex-1 pr-2">
         {value.map((child, index) => (
-          <div key={index} className="p-4 rounded-lg border-2 border-border space-y-3">
-            <div className="flex justify-between items-center mb-2">
-              <Label className="text-base font-medium">Child {index + 1}</Label>
-              {value.length > 1 && (
+          <div key={index} className="border-l-[3px] border-wizard-sidebar pl-4 space-y-3">
+            {value.length > 1 && (
+              <div className="flex justify-end">
                 <button
                   onClick={() => handleRemoveChild(index)}
                   className="text-sm text-muted-foreground hover:text-destructive transition-colors"
                 >
                   Remove
                 </button>
-              )}
-            </div>
+              </div>
+            )}
             
             <div className="space-y-2">
-              <Label htmlFor={`name-${index}`} className="text-sm">
-                Child's Name
+              <Label htmlFor={`name-${index}`} className="text-sm font-medium">
+                Student's Name
               </Label>
               <Input
                 id={`name-${index}`}
                 value={child.name}
                 onChange={(e) => handleUpdateChild(index, "name", e.target.value)}
-                placeholder="Enter child's name"
+                placeholder="Enter student's name"
                 className="h-11"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor={`grade-${index}`} className="text-sm">
+              <Label htmlFor={`grade-${index}`} className="text-sm font-medium">
                 Grade Level
               </Label>
               <Select
@@ -106,13 +104,13 @@ const Step4 = ({ value, onChange }: Step4Props) => {
           </div>
         ))}
 
-        {/* Ghost/Add Another Child Button */}
+        {/* Ghost/Add Another Student Button */}
         <button
           onClick={handleAddChild}
           className="w-full p-4 rounded-lg border-2 border-dashed border-border hover:border-primary hover:bg-accent/50 transition-all flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground"
         >
           <Plus className="h-5 w-5" />
-          <span className="font-medium">Add another child</span>
+          <span className="font-medium">Add another student</span>
         </button>
       </div>
     </div>
