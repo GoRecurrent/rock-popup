@@ -129,7 +129,7 @@ const WizardModal = () => {
 
   return (
     <Dialog open={open} onOpenChange={() => {}}>
-      <DialogContent className="max-w-[800px] p-0 gap-0 bg-background border-0 overflow-hidden h-[90vh]">
+      <DialogContent className="max-w-[800px] p-0 gap-0 bg-background border-0 overflow-hidden h-[90vh] sm:h-[500px]">
         <button
           onClick={handleClose}
           className="absolute right-4 top-4 z-50 rounded-sm bg-wizard-sidebar text-white p-1.5 transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
@@ -156,7 +156,9 @@ const WizardModal = () => {
               </div>
             )}
 
-            <div className="flex-1 overflow-y-auto p-6 md:p-8">{renderStep()}</div>
+            <div className="flex-1 overflow-y-auto min-h-0">
+              <div className="p-6 md:p-8">{renderStep()}</div>
+            </div>
 
             {currentStep < 6 && (
               <div className="p-6 border-t border-border flex justify-between gap-4 shrink-0">
