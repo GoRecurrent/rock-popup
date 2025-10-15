@@ -1,7 +1,8 @@
+import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface Child {
   name: string;
@@ -11,9 +12,12 @@ interface Child {
 interface Step4Props {
   value: Child[];
   onChange: (value: Child[]) => void;
+  onAutoAdvance?: () => void;
 }
 
-const Step4 = ({ value, onChange }: Step4Props) => {
+const Step4 = ({ value, onChange, onAutoAdvance }: Step4Props) => {
+  const [activeStudentIndex, setActiveStudentIndex] = useState(0);
+
   const gradeLevels = [
     "Pre-K",
     "Kindergarten",
@@ -32,7 +36,10 @@ const Step4 = ({ value, onChange }: Step4Props) => {
   ];
 
   const handleAddChild = () => {
-    onChange([...value, { name: "", gradeLevel: "" }]);
+    if (value.length < 3) {
+      onChange([...value, { name: "", gradeLevel: "" }]);
+      setActiveStudentIndex(value.length);
+    }
   };
 
   const handleUpdateChild = (index: number, field: "name" | "gradeLevel", fieldValue: string) => {
@@ -41,9 +48,8 @@ const Step4 = ({ value, onChange }: Step4Props) => {
     onChange(updated);
   };
 
-  const handleRemoveChild = (index: number) => {
-    onChange(value.filter((_, i) => i !== index));
-  };
+  const currentStudent = value[activeStudentIndex];
+  const isCurrentValid = currentStudent?.name !== "" && currentStudent?.gradeLevel !== "";
 
   return (
     <div className="space-y-3">
@@ -53,64 +59,81 @@ const Step4 = ({ value, onChange }: Step4Props) => {
         </h2>
       </div>
 
+      {/* Student tabs */}
+      {value.length > 1 && (
+        <div className="flex gap-2 flex-wrap">
+          {value.map((child, index) => (
+            <button
+              key={index}
+              onClick={() => setActiveStudentIndex(index)}
+              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                activeStudentIndex === index
+                  ? "bg-wizard-sidebar text-white"
+                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+              }`}
+            >
+              Student #{index + 1}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Current student form */}
       <div className="space-y-3">
-        {value.map((child, index) => (
-          <div key={index} className="border-l-[3px] border-wizard-sidebar pl-3 space-y-2">
-            {value.length > 1 && (
-              <div className="flex justify-end">
-                <button
-                  onClick={() => handleRemoveChild(index)}
-                  className="text-sm text-muted-foreground hover:text-destructive transition-colors"
-                >
-                  Remove
-                </button>
-              </div>
-            )}
-            
-            <div className="space-y-2">
-              <Label htmlFor={`name-${index}`} className="text-sm font-medium">
-                Student's Name
-              </Label>
-              <Input
-                id={`name-${index}`}
-                value={child.name}
-                onChange={(e) => handleUpdateChild(index, "name", e.target.value)}
-                placeholder="Enter student's name"
-                className="h-10"
-              />
-            </div>
+        <div className="space-y-2">
+          <Label htmlFor="student-name" className="text-sm font-medium">
+            Student's Name
+          </Label>
+          <Input
+            id="student-name"
+            value={currentStudent?.name || ""}
+            onChange={(e) => handleUpdateChild(activeStudentIndex, "name", e.target.value)}
+            placeholder="Enter student's name"
+            className="h-10"
+          />
+        </div>
 
-            <div className="space-y-2">
-              <Label htmlFor={`grade-${index}`} className="text-sm font-medium">
-                Grade Level
-              </Label>
-              <Select
-                value={child.gradeLevel}
-                onValueChange={(val) => handleUpdateChild(index, "gradeLevel", val)}
-              >
-                <SelectTrigger id={`grade-${index}`} className="h-10">
-                  <SelectValue placeholder="Select grade level" />
-                </SelectTrigger>
-                <SelectContent className="bg-popover z-50 max-h-[300px]">
-                  {gradeLevels.map((grade) => (
-                    <SelectItem key={grade} value={grade}>
-                      {grade}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        ))}
+        <div className="space-y-2">
+          <Label htmlFor="grade-level" className="text-sm font-medium">
+            Grade Level
+          </Label>
+          <Select
+            value={currentStudent?.gradeLevel || ""}
+            onValueChange={(val) => handleUpdateChild(activeStudentIndex, "gradeLevel", val)}
+          >
+            <SelectTrigger id="grade-level" className="h-10">
+              <SelectValue placeholder="Select grade level" />
+            </SelectTrigger>
+            <SelectContent className="bg-popover z-50 max-h-[300px]">
+              {gradeLevels.map((grade) => (
+                <SelectItem key={grade} value={grade}>
+                  {grade}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-        {/* Ghost/Add Another Student Button */}
-        <button
-          onClick={handleAddChild}
-          className="w-full p-3 rounded-lg border-2 border-dashed border-border hover:border-primary hover:bg-accent/50 transition-all flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground"
+        {/* Add another student button */}
+        {value.length < 3 && (
+          <Button
+            onClick={handleAddChild}
+            variant="outline"
+            className="w-full mt-2"
+            disabled={!isCurrentValid}
+          >
+            Add another student (up to 3)
+          </Button>
+        )}
+
+        {/* Next button */}
+        <Button
+          onClick={onAutoAdvance}
+          disabled={!isCurrentValid}
+          className="w-full bg-wizard-sidebar text-white hover:bg-wizard-sidebar/90 border-l-4 border-button-accent"
         >
-          <Plus className="h-5 w-5" />
-          <span className="font-medium">Add another student</span>
-        </button>
+          Next
+        </Button>
       </div>
     </div>
   );

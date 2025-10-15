@@ -1,21 +1,14 @@
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 interface Step5Props {
-  parentGuide: string;
   questions: string;
-  onParentGuideChange: (value: string) => void;
   onQuestionsChange: (value: string) => void;
   onAutoAdvance?: () => void;
 }
 
-const Step5 = ({ parentGuide, questions, onParentGuideChange, onQuestionsChange, onAutoAdvance }: Step5Props) => {
-  const handleParentGuideSelect = (value: string) => {
-    onParentGuideChange(value);
-    // Don't auto-advance here since they might want to add questions
-  };
-
+const Step5 = ({ questions, onQuestionsChange, onAutoAdvance }: Step5Props) => {
   return (
     <div className="space-y-3">
       <div>
@@ -23,33 +16,7 @@ const Step5 = ({ parentGuide, questions, onParentGuideChange, onQuestionsChange,
           Additional Information
         </h2>
 
-        <div className="space-y-4">
-          <div>
-            <Label className="text-sm font-medium mb-2 block">
-              Would you like to download our comprehensive parent guide?
-            </Label>
-            <RadioGroup value={parentGuide} onValueChange={handleParentGuideSelect} className="space-y-3">
-              <div
-                className="flex items-center space-x-3 p-4 rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
-                onClick={() => handleParentGuideSelect("yes")}
-              >
-                <RadioGroupItem value="yes" id="guide-yes" />
-                <Label htmlFor="guide-yes" className="flex-1 cursor-pointer font-medium text-foreground">
-                  Yes, please send me the parent guide
-                </Label>
-              </div>
-              <div
-                className="flex items-center space-x-3 p-4 rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
-                onClick={() => handleParentGuideSelect("no")}
-              >
-                <RadioGroupItem value="no" id="guide-no" />
-                <Label htmlFor="guide-no" className="flex-1 cursor-pointer font-medium text-foreground">
-                  No, thank you
-                </Label>
-              </div>
-            </RadioGroup>
-          </div>
-
+        <div className="space-y-3">
           <div>
             <Label htmlFor="questions" className="text-sm font-medium mb-2 block">
               Do you have any additional questions? (Optional)
@@ -62,6 +29,13 @@ const Step5 = ({ parentGuide, questions, onParentGuideChange, onQuestionsChange,
               className="min-h-[80px] resize-none"
             />
           </div>
+
+          <Button
+            onClick={onAutoAdvance}
+            className="w-full bg-wizard-sidebar text-white hover:bg-wizard-sidebar/90 border-l-4 border-button-accent"
+          >
+            Next
+          </Button>
         </div>
       </div>
     </div>

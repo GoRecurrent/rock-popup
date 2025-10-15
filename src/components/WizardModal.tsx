@@ -94,13 +94,11 @@ const WizardModal = () => {
       case 2:
         return <Step2 value={formData.step2} onChange={(value) => updateFormData({ step2: value })} onAutoAdvance={handleNext} />;
       case 3:
-        return <Step4 value={formData.step3} onChange={(value) => updateFormData({ step3: value })} />;
+        return <Step4 value={formData.step3} onChange={(value) => updateFormData({ step3: value })} onAutoAdvance={handleNext} />;
       case 4:
         return (
           <Step5
-            parentGuide={formData.step4ParentGuide}
             questions={formData.step4Questions}
-            onParentGuideChange={(value) => updateFormData({ step4ParentGuide: value })}
             onQuestionsChange={(value) => updateFormData({ step4Questions: value })}
             onAutoAdvance={handleNext}
           />
@@ -114,6 +112,7 @@ const WizardModal = () => {
             onParentNameChange={(value) => updateFormData({ step5ParentName: value })}
             onEmailChange={(value) => updateFormData({ step5Email: value })}
             onPhoneChange={(value) => updateFormData({ step5Phone: value })}
+            onAutoAdvance={handleNext}
           />
         );
       case 6:
@@ -140,16 +139,18 @@ const WizardModal = () => {
 
         <div className="flex flex-col sm:flex-row h-full">
           {/* Left Sidebar */}
-          <div className="sm:w-[45%] bg-wizard-sidebar p-6 sm:p-8 lg:p-10 flex flex-col text-primary-foreground">
-            <img src="/rock-logo.webp" alt="Rock Academy Logo" className="h-12 sm:h-20 w-auto object-contain mb-6 sm:mb-12 self-start" />
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-3 sm:mb-5 leading-tight text-left">
-              Is the Rock Academy the right fit for you?
-            </h1>
-            <p className="text-base sm:text-lg lg:text-xl opacity-90 text-left">Get personalized answers in 30 seconds.</p>
-          </div>
+          {currentStep < 6 && (
+            <div className="sm:w-[45%] bg-wizard-sidebar p-6 sm:p-8 lg:p-10 flex flex-col text-primary-foreground">
+              <img src="/rock-logo.webp" alt="Rock Academy Logo" className="h-12 sm:h-20 w-auto object-contain mb-6 sm:mb-12 self-start" />
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-3 sm:mb-5 leading-tight text-left">
+                Is the Rock Academy the right fit for you?
+              </h1>
+              <p className="text-base sm:text-lg lg:text-xl opacity-90 text-left">Get personalized answers in 30 seconds.</p>
+            </div>
+          )}
 
           {/* Right Content Area */}
-          <div className="sm:w-[55%] bg-background flex flex-col h-full">
+          <div className={`${currentStep === 6 ? 'w-full' : 'sm:w-[55%]'} bg-background flex flex-col h-full`}>
             {currentStep < 6 && (
               <div className="p-4 pt-12 border-b border-border shrink-0">
                 <WizardProgress currentStep={currentStep} totalSteps={5} />
@@ -157,28 +158,8 @@ const WizardModal = () => {
             )}
 
             <div className="flex-1 overflow-y-auto min-h-0">
-              <div className="p-4">{renderStep()}</div>
+              {currentStep === 6 ? renderStep() : <div className="p-4">{renderStep()}</div>}
             </div>
-
-            {currentStep < 6 && (
-              <div className="p-4 border-t border-border flex justify-between gap-4 shrink-0">
-                <Button
-                  onClick={handleBack}
-                  disabled={currentStep === 1}
-                  variant="outline"
-                  className="px-8 hover:bg-wizard-progress hover:text-primary hover:border-wizard-progress"
-                >
-                  Back
-                </Button>
-                <Button
-                  onClick={currentStep === 5 ? handleNext : handleNext}
-                  disabled={!isStepValid()}
-                  className="px-8 bg-wizard-sidebar text-white hover:bg-wizard-sidebar/90 border-l-4 border-button-accent"
-                >
-                  {currentStep === 5 ? "Submit" : "Next"}
-                </Button>
-              </div>
-            )}
           </div>
         </div>
       </DialogContent>
