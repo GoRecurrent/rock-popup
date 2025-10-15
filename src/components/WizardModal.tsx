@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import WizardProgress from "./WizardProgress";
 import Step1 from "./wizard-steps/Step1";
 import Step2 from "./wizard-steps/Step2";
-import Step3 from "./wizard-steps/Step3";
+
 import Step4 from "./wizard-steps/Step4";
 import Step5 from "./wizard-steps/Step5";
 import Step6 from "./wizard-steps/Step6";
@@ -15,14 +15,13 @@ const DISMISSED_KEY = "rockPopupDismissed";
 export interface WizardFormData {
   step1: string;
   step2: string;
-  step3: string[];
-  step4: string;
-  step5ParentGuide: string;
-  step5Questions: string;
-  step6FirstName: string;
-  step6LastName: string;
-  step6Email: string;
-  step6Phone: string;
+  step3: { name: string; gradeLevel: string }[];
+  step4ParentGuide: string;
+  step4Questions: string;
+  step5FirstName: string;
+  step5LastName: string;
+  step5Email: string;
+  step5Phone: string;
 }
 
 const WizardModal = () => {
@@ -32,14 +31,13 @@ const WizardModal = () => {
   const [formData, setFormData] = useState<WizardFormData>({
     step1: "",
     step2: "",
-    step3: [],
-    step4: "2026-2027",
-    step5ParentGuide: "yes",
-    step5Questions: "",
-    step6FirstName: "",
-    step6LastName: "",
-    step6Email: "",
-    step6Phone: "",
+    step3: [{ name: "", gradeLevel: "" }],
+    step4ParentGuide: "",
+    step4Questions: "",
+    step5FirstName: "",
+    step5LastName: "",
+    step5Email: "",
+    step5Phone: "",
   });
 
   useEffect(() => {
@@ -58,7 +56,7 @@ const WizardModal = () => {
   };
 
   const handleNext = () => {
-    setCurrentStep((prev) => Math.min(prev + 1, 7));
+    setCurrentStep((prev) => Math.min(prev + 1, 6));
   };
 
   const handleBack = () => {
@@ -76,18 +74,16 @@ const WizardModal = () => {
       case 2:
         return formData.step2 !== "";
       case 3:
-        return formData.step3.length > 0;
+        return formData.step3.length > 0 && formData.step3.every(child => child.name !== "" && child.gradeLevel !== "");
       case 4:
-        return formData.step4 !== "";
+        return formData.step4ParentGuide !== "";
       case 5:
-        return formData.step5ParentGuide !== "";
-      case 6:
         return (
-          formData.step6FirstName !== "" &&
-          formData.step6LastName !== "" &&
-          formData.step6Email !== "" &&
-          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.step6Email) &&
-          formData.step6Phone.replace(/\D/g, "").length === 10
+          formData.step5FirstName !== "" &&
+          formData.step5LastName !== "" &&
+          formData.step5Email !== "" &&
+          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.step5Email) &&
+          formData.step5Phone.replace(/\D/g, "").length === 10
         );
       default:
         return true;
@@ -101,33 +97,31 @@ const WizardModal = () => {
       case 2:
         return <Step2 value={formData.step2} onChange={(value) => updateFormData({ step2: value })} onAutoAdvance={handleNext} />;
       case 3:
-        return <Step3 value={formData.step3} onChange={(value) => updateFormData({ step3: value })} />;
+        return <Step4 value={formData.step3} onChange={(value) => updateFormData({ step3: value })} />;
       case 4:
-        return <Step4 value={formData.step4} onChange={(value) => updateFormData({ step4: value })} onAutoAdvance={handleNext} />;
-      case 5:
         return (
           <Step5
-            parentGuide={formData.step5ParentGuide}
-            questions={formData.step5Questions}
-            onParentGuideChange={(value) => updateFormData({ step5ParentGuide: value })}
-            onQuestionsChange={(value) => updateFormData({ step5Questions: value })}
+            parentGuide={formData.step4ParentGuide}
+            questions={formData.step4Questions}
+            onParentGuideChange={(value) => updateFormData({ step4ParentGuide: value })}
+            onQuestionsChange={(value) => updateFormData({ step4Questions: value })}
             onAutoAdvance={handleNext}
           />
         );
-      case 6:
+      case 5:
         return (
           <Step6
-            firstName={formData.step6FirstName}
-            lastName={formData.step6LastName}
-            email={formData.step6Email}
-            phone={formData.step6Phone}
-            onFirstNameChange={(value) => updateFormData({ step6FirstName: value })}
-            onLastNameChange={(value) => updateFormData({ step6LastName: value })}
-            onEmailChange={(value) => updateFormData({ step6Email: value })}
-            onPhoneChange={(value) => updateFormData({ step6Phone: value })}
+            firstName={formData.step5FirstName}
+            lastName={formData.step5LastName}
+            email={formData.step5Email}
+            phone={formData.step5Phone}
+            onFirstNameChange={(value) => updateFormData({ step5FirstName: value })}
+            onLastNameChange={(value) => updateFormData({ step5LastName: value })}
+            onEmailChange={(value) => updateFormData({ step5Email: value })}
+            onPhoneChange={(value) => updateFormData({ step5Phone: value })}
           />
         );
-      case 7:
+      case 6:
         return <ThankYouPage formData={formData} onClose={handleClose} />;
       default:
         return null;
@@ -151,7 +145,7 @@ const WizardModal = () => {
 
         <div className="flex flex-col sm:flex-row h-full">
           {/* Left Sidebar */}
-          <div className="sm:w-2/5 bg-wizard-sidebar p-6 sm:p-8 lg:p-10 flex flex-col text-primary-foreground">
+          <div className="sm:w-[45%] bg-wizard-sidebar p-6 sm:p-8 lg:p-10 flex flex-col text-primary-foreground">
             <img src="/rock-logo.webp" alt="Rock Academy Logo" className="h-12 sm:h-20 w-auto object-contain mb-6 sm:mb-12 self-start" />
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-3 sm:mb-5 leading-tight text-left">
               Is the Rock Academy the right fit for you?
@@ -160,16 +154,16 @@ const WizardModal = () => {
           </div>
 
           {/* Right Content Area */}
-          <div className="sm:w-3/5 bg-background flex flex-col">
-            {currentStep < 7 && (
+          <div className="sm:w-[55%] bg-background flex flex-col">
+            {currentStep < 6 && (
               <div className="p-6 pt-16 border-b border-border">
-                <WizardProgress currentStep={currentStep} totalSteps={6} />
+                <WizardProgress currentStep={currentStep} totalSteps={5} />
               </div>
             )}
 
             <div className="flex-1 overflow-y-auto p-6 md:p-8">{renderStep()}</div>
 
-            {currentStep < 7 && (
+            {currentStep < 6 && (
               <div className="p-6 border-t border-border flex justify-between gap-4">
                 <Button
                   onClick={handleBack}
@@ -180,11 +174,11 @@ const WizardModal = () => {
                   Back
                 </Button>
                 <Button
-                  onClick={currentStep === 6 ? handleNext : handleNext}
+                  onClick={currentStep === 5 ? handleNext : handleNext}
                   disabled={!isStepValid()}
                   className="px-8 bg-wizard-sidebar text-white hover:bg-wizard-sidebar/90 border-l-4 border-button-accent"
                 >
-                  {currentStep === 6 ? "Submit" : "Next"}
+                  {currentStep === 5 ? "Submit" : "Next"}
                 </Button>
               </div>
             )}

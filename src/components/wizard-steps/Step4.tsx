@@ -1,48 +1,119 @@
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plus } from "lucide-react";
 
-interface Step4Props {
-  value: string;
-  onChange: (value: string) => void;
-  onAutoAdvance?: () => void;
+interface Child {
+  name: string;
+  gradeLevel: string;
 }
 
-const Step4 = ({ value, onChange, onAutoAdvance }: Step4Props) => {
-  const options = ["2025-2026", "2026-2027", "2027-2028"];
+interface Step4Props {
+  value: Child[];
+  onChange: (value: Child[]) => void;
+}
 
-  const handleSelect = (selectedValue: string) => {
-    onChange(selectedValue);
-    // Auto-advance after a short delay
-    setTimeout(() => {
-      onAutoAdvance?.();
-    }, 300);
+const Step4 = ({ value, onChange }: Step4Props) => {
+  const gradeLevels = [
+    "Transitional Kindergarten",
+    "Pre-K",
+    "Kindergarten",
+    "1st Grade",
+    "2nd Grade",
+    "3rd Grade",
+    "4th Grade",
+    "5th Grade",
+    "6th Grade",
+    "7th Grade",
+    "8th Grade",
+    "9th Grade",
+    "10th Grade",
+    "11th Grade",
+    "12th Grade",
+  ];
+
+  const handleAddChild = () => {
+    onChange([...value, { name: "", gradeLevel: "" }]);
+  };
+
+  const handleUpdateChild = (index: number, field: "name" | "gradeLevel", fieldValue: string) => {
+    const updated = [...value];
+    updated[index][field] = fieldValue;
+    onChange(updated);
+  };
+
+  const handleRemoveChild = (index: number) => {
+    onChange(value.filter((_, i) => i !== index));
   };
 
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          What school year are you considering for enrollment?
+          What is the name and grade level of your student(s) for 2026-2027 school year?
         </h2>
-        <p className="text-muted-foreground">This helps us prepare the right information for you.</p>
+        <p className="text-muted-foreground">Add each child you're considering enrolling.</p>
       </div>
 
-      <div className="space-y-3">
-        <Label htmlFor="school-year" className="text-base font-medium">
-          School Year
-        </Label>
-        <Select value={value} onValueChange={handleSelect}>
-          <SelectTrigger id="school-year" className="w-full h-12 text-base">
-            <SelectValue placeholder="Select a school year" />
-          </SelectTrigger>
-          <SelectContent className="bg-popover z-50">
-            {options.map((option) => (
-              <SelectItem key={option} value={option} className="text-base">
-                {option}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      <div className="space-y-4">
+        {value.map((child, index) => (
+          <div key={index} className="p-4 rounded-lg border-2 border-border space-y-3">
+            <div className="flex justify-between items-center mb-2">
+              <Label className="text-base font-medium">Child {index + 1}</Label>
+              {value.length > 1 && (
+                <button
+                  onClick={() => handleRemoveChild(index)}
+                  className="text-sm text-muted-foreground hover:text-destructive transition-colors"
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor={`name-${index}`} className="text-sm">
+                Child's Name
+              </Label>
+              <Input
+                id={`name-${index}`}
+                value={child.name}
+                onChange={(e) => handleUpdateChild(index, "name", e.target.value)}
+                placeholder="Enter child's name"
+                className="h-11"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor={`grade-${index}`} className="text-sm">
+                Grade Level
+              </Label>
+              <Select
+                value={child.gradeLevel}
+                onValueChange={(val) => handleUpdateChild(index, "gradeLevel", val)}
+              >
+                <SelectTrigger id={`grade-${index}`} className="h-11">
+                  <SelectValue placeholder="Select grade level" />
+                </SelectTrigger>
+                <SelectContent className="bg-popover z-50 max-h-[300px]">
+                  {gradeLevels.map((grade) => (
+                    <SelectItem key={grade} value={grade}>
+                      {grade}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        ))}
+
+        {/* Ghost/Add Another Child Button */}
+        <button
+          onClick={handleAddChild}
+          className="w-full p-4 rounded-lg border-2 border-dashed border-border hover:border-primary hover:bg-accent/50 transition-all flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground"
+        >
+          <Plus className="h-5 w-5" />
+          <span className="font-medium">Add another child</span>
+        </button>
       </div>
     </div>
   );

@@ -62,7 +62,7 @@ const ThankYouPage = ({ formData, onClose }: ThankYouPageProps) => {
       </div>
 
       <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-        Thank you, {formData.step6FirstName}!
+        Thank you, {formData.step5FirstName}!
       </h1>
 
       <p className="text-xl text-muted-foreground mb-8 max-w-2xl">
@@ -80,10 +80,15 @@ const ThankYouPage = ({ formData, onClose }: ThankYouPageProps) => {
             <span className="font-medium">Main Concern:</span> {formData.step2}
           </div>
           <div>
-            <span className="font-medium">Grade Levels:</span> {formData.step3.join(", ")}
+            <span className="font-medium">Students:</span>{" "}
+            {formData.step3.map((child, index) => (
+              <span key={index}>
+                {child.name} ({child.gradeLevel}){index < formData.step3.length - 1 ? ", " : ""}
+              </span>
+            ))}
           </div>
           <div>
-            <span className="font-medium">Enrollment Year:</span> {formData.step4}
+            <span className="font-medium">Enrollment Year:</span> 2026-2027
           </div>
         </div>
       </div>
@@ -100,7 +105,7 @@ const ThankYouPage = ({ formData, onClose }: ThankYouPageProps) => {
       )}
 
       <div className="space-y-4 text-muted-foreground max-w-2xl">
-        {formData.step5ParentGuide === "yes" && (
+        {formData.step4ParentGuide === "yes" && (
           <p>
             ✓ We'll email you our comprehensive parent guide within the next few minutes.
           </p>
