@@ -111,7 +111,7 @@ const ThankYouPage = ({ formData, onClose }: ThankYouPageProps) => {
         </p>
       </div>
 
-      <Button onClick={onClose} className="mt-8 px-8 bg-accent text-accent-foreground hover:bg-accent/90">
+      <Button onClick={onClose} className="mt-8 px-8 bg-wizard-progress text-primary hover:bg-wizard-progress/90 border-l-4 border-button-accent">
         Close
       </Button>
     </div>

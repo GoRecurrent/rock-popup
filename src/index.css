@@ -38,9 +38,10 @@ All colors MUST be HSL.
 
     --radius: 0.75rem;
     
-    --wizard-bg: 215 60% 20%;
-    --wizard-sidebar: 215 65% 18%;
-    --wizard-progress: 38 92% 50%;
+    --wizard-bg: 267 45% 34%;
+    --wizard-sidebar: 267 45% 34%;
+    --wizard-progress: 45 100% 70%;
+    --button-accent: 41 86% 63%;
     --success: 142 76% 36%;
     --success-foreground: 0 0% 98%;
 
@@ -90,9 +91,10 @@ All colors MUST be HSL.
     --input: 217 33% 18%;
     --ring: 38 92% 50%;
     
-    --wizard-bg: 215 35% 12%;
-    --wizard-sidebar: 215 40% 10%;
-    --wizard-progress: 38 92% 50%;
+    --wizard-bg: 267 35% 24%;
+    --wizard-sidebar: 267 35% 24%;
+    --wizard-progress: 45 100% 70%;
+    --button-accent: 41 86% 63%;
     --success: 142 76% 36%;
     --success-foreground: 0 0% 98%;
     --sidebar-background: 240 5.9% 10%;

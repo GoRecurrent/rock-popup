@@ -60,6 +60,7 @@ export default {
         "wizard-bg": "hsl(var(--wizard-bg))",
         "wizard-sidebar": "hsl(var(--wizard-sidebar))",
         "wizard-progress": "hsl(var(--wizard-progress))",
+        "button-accent": "hsl(var(--button-accent))",
         success: {
           DEFAULT: "hsl(var(--success))",
           foreground: "hsl(var(--success-foreground))",

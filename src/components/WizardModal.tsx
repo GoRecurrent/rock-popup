@@ -155,7 +155,7 @@ const WizardModal = () => {
               Is the Rock Academy the right fit for you?
             </h1>
             <p className="text-base opacity-90 text-center">Get personalized answers in 30 seconds.</p>
-            <img src="/logo.png" alt="Rock Academy Logo" className="mt-8 h-20 object-contain" />
+            <img src="/logo.png" alt="Rock Academy Logo" className="mt-8 h-16 w-auto object-contain" />
           </div>
 
           {/* Right Content Area */}
@@ -181,7 +181,7 @@ const WizardModal = () => {
                 <Button
                   onClick={currentStep === 6 ? handleNext : handleNext}
                   disabled={!isStepValid()}
-                  className="px-8 bg-accent text-accent-foreground hover:bg-accent/90"
+                  className="px-8 bg-wizard-progress text-primary hover:bg-wizard-progress/90 border-l-4 border-button-accent"
                 >
                   {currentStep === 6 ? "Submit" : "Next"}
                 </Button>
