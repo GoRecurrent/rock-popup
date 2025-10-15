@@ -97,13 +97,13 @@ const WizardModal = () => {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <Step1 value={formData.step1} onChange={(value) => updateFormData({ step1: value })} />;
+        return <Step1 value={formData.step1} onChange={(value) => updateFormData({ step1: value })} onAutoAdvance={handleNext} />;
       case 2:
-        return <Step2 value={formData.step2} onChange={(value) => updateFormData({ step2: value })} />;
+        return <Step2 value={formData.step2} onChange={(value) => updateFormData({ step2: value })} onAutoAdvance={handleNext} />;
       case 3:
         return <Step3 value={formData.step3} onChange={(value) => updateFormData({ step3: value })} />;
       case 4:
-        return <Step4 value={formData.step4} onChange={(value) => updateFormData({ step4: value })} />;
+        return <Step4 value={formData.step4} onChange={(value) => updateFormData({ step4: value })} onAutoAdvance={handleNext} />;
       case 5:
         return (
           <Step5
@@ -111,6 +111,7 @@ const WizardModal = () => {
             questions={formData.step5Questions}
             onParentGuideChange={(value) => updateFormData({ step5ParentGuide: value })}
             onQuestionsChange={(value) => updateFormData({ step5Questions: value })}
+            onAutoAdvance={handleNext}
           />
         );
       case 6:
@@ -139,7 +140,7 @@ const WizardModal = () => {
 
   return (
     <Dialog open={open} onOpenChange={() => {}}>
-      <DialogContent className="max-w-6xl p-0 gap-0 bg-background border-0 overflow-hidden h-[90vh]">
+      <DialogContent className="max-w-[650px] p-0 gap-0 bg-background border-0 overflow-hidden h-[90vh]">
         <button
           onClick={handleClose}
           className="absolute right-4 top-4 z-50 rounded-sm bg-wizard-sidebar text-white p-1.5 transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
@@ -161,7 +162,7 @@ const WizardModal = () => {
           {/* Right Content Area */}
           <div className="md:w-3/5 bg-background flex flex-col">
             {currentStep < 7 && (
-              <div className="p-6 pt-10 border-b border-border">
+              <div className="p-6 pt-16 border-b border-border">
                 <WizardProgress currentStep={currentStep} totalSteps={6} />
               </div>
             )}

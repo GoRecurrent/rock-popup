@@ -4,10 +4,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 interface Step4Props {
   value: string;
   onChange: (value: string) => void;
+  onAutoAdvance?: () => void;
 }
 
-const Step4 = ({ value, onChange }: Step4Props) => {
+const Step4 = ({ value, onChange, onAutoAdvance }: Step4Props) => {
   const options = ["2025-2026", "2026-2027", "2027-2028"];
+
+  const handleSelect = (selectedValue: string) => {
+    onChange(selectedValue);
+    // Auto-advance after a short delay
+    setTimeout(() => {
+      onAutoAdvance?.();
+    }, 300);
+  };
 
   return (
     <div className="space-y-6">
@@ -22,7 +31,7 @@ const Step4 = ({ value, onChange }: Step4Props) => {
         <Label htmlFor="school-year" className="text-base font-medium">
           School Year
         </Label>
-        <Select value={value} onValueChange={onChange}>
+        <Select value={value} onValueChange={handleSelect}>
           <SelectTrigger id="school-year" className="w-full h-12 text-base">
             <SelectValue placeholder="Select a school year" />
           </SelectTrigger>

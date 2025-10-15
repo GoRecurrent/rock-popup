@@ -42,11 +42,11 @@ const Step3 = ({ value, onChange }: Step3Props) => {
         <p className="text-muted-foreground">Select all that apply.</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[320px] overflow-y-auto pr-2">
         {options.map((option) => (
           <div
             key={option}
-            className="flex items-center space-x-3 p-4 rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
+            className="flex items-center space-x-2 p-3 rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
             onClick={() => handleToggle(option)}
           >
             <Checkbox
@@ -54,7 +54,7 @@ const Step3 = ({ value, onChange }: Step3Props) => {
               checked={value.includes(option)}
               onCheckedChange={() => handleToggle(option)}
             />
-            <Label htmlFor={option} className="flex-1 cursor-pointer font-medium text-foreground">
+            <Label htmlFor={option} className="flex-1 cursor-pointer font-medium text-foreground text-sm">
               {option}
             </Label>
           </div>

@@ -7,9 +7,15 @@ interface Step5Props {
   questions: string;
   onParentGuideChange: (value: string) => void;
   onQuestionsChange: (value: string) => void;
+  onAutoAdvance?: () => void;
 }
 
-const Step5 = ({ parentGuide, questions, onParentGuideChange, onQuestionsChange }: Step5Props) => {
+const Step5 = ({ parentGuide, questions, onParentGuideChange, onQuestionsChange, onAutoAdvance }: Step5Props) => {
+  const handleParentGuideSelect = (value: string) => {
+    onParentGuideChange(value);
+    // Don't auto-advance here since they might want to add questions
+  };
+
   return (
     <div className="space-y-8">
       <div>
@@ -22,10 +28,10 @@ const Step5 = ({ parentGuide, questions, onParentGuideChange, onQuestionsChange 
             <Label className="text-base font-medium mb-3 block">
               Would you like to download our comprehensive parent guide?
             </Label>
-            <RadioGroup value={parentGuide} onValueChange={onParentGuideChange} className="space-y-3">
+            <RadioGroup value={parentGuide} onValueChange={handleParentGuideSelect} className="space-y-3">
               <div
                 className="flex items-center space-x-3 p-4 rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
-                onClick={() => onParentGuideChange("yes")}
+                onClick={() => handleParentGuideSelect("yes")}
               >
                 <RadioGroupItem value="yes" id="guide-yes" />
                 <Label htmlFor="guide-yes" className="flex-1 cursor-pointer font-medium text-foreground">
@@ -34,7 +40,7 @@ const Step5 = ({ parentGuide, questions, onParentGuideChange, onQuestionsChange 
               </div>
               <div
                 className="flex items-center space-x-3 p-4 rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
-                onClick={() => onParentGuideChange("no")}
+                onClick={() => handleParentGuideSelect("no")}
               >
                 <RadioGroupItem value="no" id="guide-no" />
                 <Label htmlFor="guide-no" className="flex-1 cursor-pointer font-medium text-foreground">
