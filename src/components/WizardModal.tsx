@@ -140,7 +140,7 @@ const WizardModal = () => {
 
   return (
     <Dialog open={open} onOpenChange={() => {}}>
-      <DialogContent className="max-w-[650px] p-0 gap-0 bg-background border-0 overflow-hidden h-[90vh]">
+      <DialogContent className="max-w-[800px] p-0 gap-0 bg-background border-0 overflow-hidden h-[90vh]">
         <button
           onClick={handleClose}
           className="absolute right-4 top-4 z-50 rounded-sm bg-wizard-sidebar text-white p-1.5 transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
@@ -149,18 +149,18 @@ const WizardModal = () => {
           <span className="sr-only">Close</span>
         </button>
 
-        <div className="flex flex-col md:flex-row h-full">
+        <div className="flex flex-col sm:flex-row h-full">
           {/* Left Sidebar */}
-          <div className="md:w-2/5 bg-wizard-sidebar p-8 md:p-12 flex flex-col text-primary-foreground">
-            <img src="/rock-logo.webp" alt="Rock Academy Logo" className="h-20 w-auto object-contain mb-12 self-start" />
-            <h1 className="text-3xl md:text-4xl font-semibold mb-5 leading-tight text-left">
+          <div className="sm:w-2/5 bg-wizard-sidebar p-6 sm:p-8 lg:p-10 flex flex-col text-primary-foreground">
+            <img src="/rock-logo.webp" alt="Rock Academy Logo" className="h-12 sm:h-20 w-auto object-contain mb-6 sm:mb-12 self-start" />
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-3 sm:mb-5 leading-tight text-left">
               Is the Rock Academy the right fit for you?
             </h1>
-            <p className="text-lg md:text-xl opacity-90 text-left">Get personalized answers in 30 seconds.</p>
+            <p className="text-base sm:text-lg lg:text-xl opacity-90 text-left">Get personalized answers in 30 seconds.</p>
           </div>
 
           {/* Right Content Area */}
-          <div className="md:w-3/5 bg-background flex flex-col">
+          <div className="sm:w-3/5 bg-background flex flex-col">
             {currentStep < 7 && (
               <div className="p-6 pt-16 border-b border-border">
                 <WizardProgress currentStep={currentStep} totalSteps={6} />
