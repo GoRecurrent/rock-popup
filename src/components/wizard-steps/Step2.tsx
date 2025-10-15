@@ -40,7 +40,6 @@ const Step2 = ({ value, onChange, onAutoAdvance }: Step2Props) => {
               value === "" ? "border-border animate-[shimmer_2s_ease-in-out_infinite]" : "border-border hover:border-primary"
             }`}
             style={value === "" ? { animationDelay: `${index * 0.2}s` } : {}}
-            onClick={() => handleSelect(option)}
           >
             <RadioGroupItem value={option} id={option} />
             <Label htmlFor={option} className="flex-1 cursor-pointer font-medium text-foreground">
