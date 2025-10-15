@@ -1,0 +1,67 @@
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+
+interface Step3Props {
+  value: string[];
+  onChange: (value: string[]) => void;
+}
+
+const Step3 = ({ value, onChange }: Step3Props) => {
+  const options = [
+    "Transitional Kindergarten",
+    "Pre-K",
+    "Kindergarten",
+    "Grade 1",
+    "Grade 2",
+    "Grade 3",
+    "Grade 4",
+    "Grade 5",
+    "Grade 6",
+    "Grade 7",
+    "Grade 8",
+    "Grade 9",
+    "Grade 10",
+    "Grade 11",
+    "Grade 12",
+  ];
+
+  const handleToggle = (option: string) => {
+    if (value.includes(option)) {
+      onChange(value.filter((v) => v !== option));
+    } else {
+      onChange([...value, option]);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground mb-2">
+          What grade level(s) are you interested in?
+        </h2>
+        <p className="text-muted-foreground">Select all that apply.</p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {options.map((option) => (
+          <div
+            key={option}
+            className="flex items-center space-x-3 p-4 rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
+            onClick={() => handleToggle(option)}
+          >
+            <Checkbox
+              id={option}
+              checked={value.includes(option)}
+              onCheckedChange={() => handleToggle(option)}
+            />
+            <Label htmlFor={option} className="flex-1 cursor-pointer font-medium text-foreground">
+              {option}
+            </Label>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Step3;

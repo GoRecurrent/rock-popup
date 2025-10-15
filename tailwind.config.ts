@@ -57,6 +57,13 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        "wizard-bg": "hsl(var(--wizard-bg))",
+        "wizard-sidebar": "hsl(var(--wizard-sidebar))",
+        "wizard-progress": "hsl(var(--wizard-progress))",
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
