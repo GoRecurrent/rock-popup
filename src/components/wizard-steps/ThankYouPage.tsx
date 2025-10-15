@@ -1,60 +1,38 @@
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
 import type { WizardFormData } from "../WizardModal";
-
 interface ThankYouPageProps {
   formData: WizardFormData;
   onClose: () => void;
 }
-
-const ThankYouPage = ({ formData, onClose }: ThankYouPageProps) => {
+const ThankYouPage = ({
+  formData,
+  onClose
+}: ThankYouPageProps) => {
   const getPersonalizedMessage = () => {
     const messages = [];
-
     if (formData.step1 === "High quality education") {
-      messages.push(
-        "We're proud of our rigorous academic standards and our track record of preparing students for college success."
-      );
+      messages.push("We're proud of our rigorous academic standards and our track record of preparing students for college success.");
     } else if (formData.step1 === "Faith and character development") {
-      messages.push(
-        "At Rock Academy, we integrate biblical principles into every aspect of learning, helping students develop strong character and faith."
-      );
+      messages.push("At Rock Academy, we integrate biblical principles into every aspect of learning, helping students develop strong character and faith.");
     } else if (formData.step1 === "Extracurricular activities") {
-      messages.push(
-        "Our comprehensive extracurricular program offers opportunities in athletics, arts, leadership, and community service."
-      );
+      messages.push("Our comprehensive extracurricular program offers opportunities in athletics, arts, leadership, and community service.");
     } else if (formData.step1 === "Physical and emotional safety") {
-      messages.push(
-        "We maintain a nurturing environment with dedicated staff, small class sizes, and comprehensive safety protocols."
-      );
+      messages.push("We maintain a nurturing environment with dedicated staff, small class sizes, and comprehensive safety protocols.");
     }
-
     if (formData.step2 === "Affordability") {
-      messages.push(
-        "We offer various financial aid options and tuition assistance programs to make Christian education accessible to families."
-      );
+      messages.push("We offer various financial aid options and tuition assistance programs to make Christian education accessible to families.");
     } else if (formData.step2 === "Class size") {
-      messages.push(
-        "Our average class size is 15 students, ensuring personalized attention and strong teacher-student relationships."
-      );
+      messages.push("Our average class size is 15 students, ensuring personalized attention and strong teacher-student relationships.");
     } else if (formData.step2 === "Academic rigor") {
-      messages.push(
-        "Our curriculum exceeds state standards, and our graduates consistently score above national averages on standardized tests."
-      );
+      messages.push("Our curriculum exceeds state standards, and our graduates consistently score above national averages on standardized tests.");
     } else if (formData.step2 === "Fitting in / social environment") {
-      messages.push(
-        "Our warm, inclusive community welcomes students from diverse backgrounds and helps each child find their place."
-      );
+      messages.push("Our warm, inclusive community welcomes students from diverse backgrounds and helps each child find their place.");
     }
-
     return messages;
   };
-
   const messages = getPersonalizedMessage();
-
-  return (
-    <div className="overflow-y-auto h-full px-6 py-8">
+  return <div className="overflow-y-auto h-full px-6 py-8">
       <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
         <img src="/logo.png" alt="Rock Academy Logo" className="h-16 mb-6 object-contain" />
         
@@ -70,47 +48,19 @@ const ThankYouPage = ({ formData, onClose }: ThankYouPageProps) => {
           We've received your information and are excited to help you learn more about Rock Academy.
         </p>
 
-        <div className="bg-muted rounded-lg p-6 mb-8 w-full text-left space-y-4">
-          <h2 className="text-lg font-semibold text-foreground mb-4">Your Personalized Summary:</h2>
-          
-          <div className="space-y-3 text-sm text-foreground">
-            <div>
-              <span className="font-medium">Primary Interest:</span> {formData.step1}
-            </div>
-            <div>
-              <span className="font-medium">Main Concern:</span> {formData.step2}
-            </div>
-            <div>
-              <span className="font-medium">Students:</span>{" "}
-              {formData.step3.map((child, index) => (
-                <span key={index}>
-                  {child.name} ({child.gradeLevel}){index < formData.step3.length - 1 ? ", " : ""}
-                </span>
-              ))}
-            </div>
-            <div>
-              <span className="font-medium">Enrollment Year:</span> 2026-2027
-            </div>
-          </div>
-        </div>
+        
 
-        {messages.length > 0 && (
-          <div className="bg-accent/10 border border-accent/20 rounded-lg p-6 mb-8 w-full text-left space-y-4">
+        {messages.length > 0 && <div className="bg-accent/10 border border-accent/20 rounded-lg p-6 mb-8 w-full text-left space-y-4">
             <h3 className="text-lg font-semibold text-foreground">Based on your responses:</h3>
-            {messages.map((message, index) => (
-              <p key={index} className="text-foreground/90">
+            {messages.map((message, index) => <p key={index} className="text-foreground/90">
                 {message}
-              </p>
-            ))}
-          </div>
-        )}
+              </p>)}
+          </div>}
 
         <div className="space-y-4 text-muted-foreground w-full">
-          {formData.step4ParentGuide === "yes" && (
-            <p>
+          {formData.step4ParentGuide === "yes" && <p>
               ✓ We'll email you our comprehensive parent guide within the next few minutes.
-            </p>
-          )}
+            </p>}
           <p>
             A member of our admissions team will reach out to you within 1-2 business days to answer any questions
             and schedule a campus tour.
@@ -121,8 +71,6 @@ const ThankYouPage = ({ formData, onClose }: ThankYouPageProps) => {
           Close
         </Button>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default ThankYouPage;
