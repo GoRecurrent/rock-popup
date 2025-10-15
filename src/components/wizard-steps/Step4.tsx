@@ -46,7 +46,7 @@ const Step4 = ({ value, onChange }: Step4Props) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 flex flex-col h-full">
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">
           What is the name and grade level of your student(s) for 2026-2027 school year?
@@ -54,7 +54,7 @@ const Step4 = ({ value, onChange }: Step4Props) => {
         <p className="text-muted-foreground">Add each student you're considering enrolling.</p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 overflow-y-auto flex-1 pr-2">
         {value.map((child, index) => (
           <div key={index} className="border-l-[3px] border-wizard-sidebar pl-4 space-y-3">
             {value.length > 1 && (
