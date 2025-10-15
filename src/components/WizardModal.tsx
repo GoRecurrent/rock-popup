@@ -10,9 +10,7 @@ import Step4 from "./wizard-steps/Step4";
 import Step5 from "./wizard-steps/Step5";
 import Step6 from "./wizard-steps/Step6";
 import ThankYouPage from "./wizard-steps/ThankYouPage";
-import logo from "@/assets/rock-academy-logo.png";
-
-const DISMISSED_KEY = "rock-academy-wizard-dismissed";
+const DISMISSED_KEY = "rockPopupDismissed";
 
 export interface WizardFormData {
   step1: string;
@@ -29,6 +27,7 @@ export interface WizardFormData {
 
 const WizardModal = () => {
   const [open, setOpen] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<WizardFormData>({
     step1: "",
@@ -44,14 +43,17 @@ const WizardModal = () => {
   });
 
   useEffect(() => {
-    const dismissed = localStorage.getItem(DISMISSED_KEY);
-    if (!dismissed) {
+    const flag = localStorage.getItem(DISMISSED_KEY);
+    if (flag === "1") {
+      setDismissed(true);
+    } else {
       setOpen(true);
     }
   }, []);
 
   const handleClose = () => {
-    localStorage.setItem(DISMISSED_KEY, "true");
+    localStorage.setItem(DISMISSED_KEY, "1");
+    setDismissed(true);
     setOpen(false);
   };
 
@@ -131,6 +133,10 @@ const WizardModal = () => {
     }
   };
 
+  if (dismissed) {
+    return null;
+  }
+
   return (
     <Dialog open={open} onOpenChange={() => {}}>
       <DialogContent className="max-w-6xl p-0 gap-0 bg-background border-0 overflow-hidden h-[90vh]">
@@ -144,16 +150,16 @@ const WizardModal = () => {
 
         <div className="flex flex-col md:flex-row h-full">
           {/* Left Sidebar */}
-          <div className="md:w-2/5 bg-wizard-sidebar p-8 md:p-12 flex flex-col justify-center text-primary-foreground">
-            <img src={logo} alt="Rock Academy Logo" className="w-24 h-24 mb-8" />
-            <h1 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+          <div className="md:w-1/3 bg-wizard-sidebar p-8 md:p-12 flex flex-col items-center justify-center text-primary-foreground">
+            <h1 className="text-2xl md:text-3xl font-semibold mb-4 text-center leading-tight">
               Is the Rock Academy the right fit for you?
             </h1>
-            <p className="text-lg opacity-90">Get personalized answers in 30 seconds.</p>
+            <p className="text-base opacity-90 text-center">Get personalized answers in 30 seconds.</p>
+            <img src="/logo.png" alt="Rock Academy Logo" className="mt-8 h-20 object-contain" />
           </div>
 
           {/* Right Content Area */}
-          <div className="md:w-3/5 bg-background flex flex-col">
+          <div className="md:w-2/3 bg-background flex flex-col">
             {currentStep < 7 && (
               <div className="p-6 border-b border-border">
                 <WizardProgress currentStep={currentStep} totalSteps={6} />

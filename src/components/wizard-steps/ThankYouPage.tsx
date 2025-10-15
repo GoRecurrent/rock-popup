@@ -1,6 +1,6 @@
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/rock-academy-logo.png";
+
 import type { WizardFormData } from "../WizardModal";
 
 interface ThankYouPageProps {
@@ -55,7 +55,7 @@ const ThankYouPage = ({ formData, onClose }: ThankYouPageProps) => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[500px] text-center px-4">
-      <img src={logo} alt="Rock Academy Logo" className="w-20 h-20 mb-6" />
+      <img src="/logo.png" alt="Rock Academy Logo" className="h-16 mb-6 object-contain" />
       
       <div className="mb-6 flex items-center justify-center">
         <CheckCircle2 className="w-16 h-16 text-success" />

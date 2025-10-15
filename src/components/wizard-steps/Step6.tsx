@@ -13,14 +13,16 @@ interface Step6Props {
 }
 
 const formatPhoneNumber = (value: string) => {
-  const phoneNumber = value.replace(/\D/g, "");
-  const phoneNumberLength = phoneNumber.length;
-
-  if (phoneNumberLength < 4) return phoneNumber;
-  if (phoneNumberLength < 7) {
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+  let digits = value.replace(/\D/g, "").slice(0, 10);
+  let formatted = digits;
+  if (digits.length >= 7) {
+    formatted = `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+  } else if (digits.length >= 4) {
+    formatted = `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  } else if (digits.length >= 1) {
+    formatted = `(${digits}`;
   }
-  return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
+  return formatted;
 };
 
 const Step6 = ({
