@@ -17,15 +17,15 @@ const Step5 = ({ parentGuide, questions, onParentGuideChange, onQuestionsChange,
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-3">
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-6">
+        <h2 className="text-lg font-bold text-foreground mb-3">
           Additional Information
         </h2>
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           <div>
-            <Label className="text-base font-medium mb-3 block">
+            <Label className="text-sm font-medium mb-2 block">
               Would you like to download our comprehensive parent guide?
             </Label>
             <RadioGroup value={parentGuide} onValueChange={handleParentGuideSelect} className="space-y-3">
@@ -51,7 +51,7 @@ const Step5 = ({ parentGuide, questions, onParentGuideChange, onQuestionsChange,
           </div>
 
           <div>
-            <Label htmlFor="questions" className="text-base font-medium mb-3 block">
+            <Label htmlFor="questions" className="text-sm font-medium mb-2 block">
               Do you have any additional questions? (Optional)
             </Label>
             <Textarea
@@ -59,7 +59,7 @@ const Step5 = ({ parentGuide, questions, onParentGuideChange, onQuestionsChange,
               value={questions}
               onChange={(e) => onQuestionsChange(e.target.value)}
               placeholder="Please share any questions or concerns you'd like us to address..."
-              className="min-h-[120px] resize-none text-base"
+              className="min-h-[80px] resize-none"
             />
           </div>
         </div>

@@ -151,17 +151,17 @@ const WizardModal = () => {
           {/* Right Content Area */}
           <div className="sm:w-[55%] bg-background flex flex-col h-full">
             {currentStep < 6 && (
-              <div className="p-6 pt-16 border-b border-border shrink-0">
+              <div className="p-4 pt-12 border-b border-border shrink-0">
                 <WizardProgress currentStep={currentStep} totalSteps={5} />
               </div>
             )}
 
             <div className="flex-1 overflow-y-auto min-h-0">
-              <div className="p-6 md:p-8">{renderStep()}</div>
+              <div className="p-4">{renderStep()}</div>
             </div>
 
             {currentStep < 6 && (
-              <div className="p-6 border-t border-border flex justify-between gap-4 shrink-0">
+              <div className="p-4 border-t border-border flex justify-between gap-4 shrink-0">
                 <Button
                   onClick={handleBack}
                   disabled={currentStep === 1}

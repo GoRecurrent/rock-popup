@@ -37,16 +37,15 @@ const Step6 = ({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">
+        <h2 className="text-lg font-bold text-foreground mb-3">
           Your Contact Information
         </h2>
-        <p className="text-muted-foreground">We'll use this information to send you personalized recommendations.</p>
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="parentName" className="text-base font-medium">
+        <Label htmlFor="parentName" className="text-sm font-medium">
           Parent Name
         </Label>
         <Input
@@ -54,13 +53,13 @@ const Step6 = ({
           value={parentName}
           onChange={(e) => onParentNameChange(e.target.value)}
           placeholder="Jessica Smith"
-          className="h-12 text-base"
+          className="h-10"
           required
         />
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="email" className="text-base font-medium">
+        <Label htmlFor="email" className="text-sm font-medium">
           Email Address
         </Label>
         <Input
@@ -69,13 +68,13 @@ const Step6 = ({
           value={email}
           onChange={(e) => onEmailChange(e.target.value)}
           placeholder="jessica.smith@example.com"
-          className="h-12 text-base"
+          className="h-10"
           required
         />
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="phone" className="text-base font-medium">
+        <Label htmlFor="phone" className="text-sm font-medium">
           Phone Number
         </Label>
         <Input
@@ -84,7 +83,7 @@ const Step6 = ({
           value={phone}
           onChange={handlePhoneChange}
           placeholder="(555) 123-4567"
-          className="h-12 text-base"
+          className="h-10"
           maxLength={14}
           required
         />

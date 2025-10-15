@@ -46,17 +46,16 @@ const Step4 = ({ value, onChange }: Step4Props) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">
+        <h2 className="text-lg font-bold text-foreground mb-3">
           What is the name and grade level of your student(s) for 2026-2027 school year?
         </h2>
-        <p className="text-muted-foreground">Add each student you're considering enrolling.</p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         {value.map((child, index) => (
-          <div key={index} className="border-l-[3px] border-wizard-sidebar pl-4 space-y-3">
+          <div key={index} className="border-l-[3px] border-wizard-sidebar pl-3 space-y-2">
             {value.length > 1 && (
               <div className="flex justify-end">
                 <button
@@ -77,7 +76,7 @@ const Step4 = ({ value, onChange }: Step4Props) => {
                 value={child.name}
                 onChange={(e) => handleUpdateChild(index, "name", e.target.value)}
                 placeholder="Enter student's name"
-                className="h-11"
+                className="h-10"
               />
             </div>
 
@@ -89,7 +88,7 @@ const Step4 = ({ value, onChange }: Step4Props) => {
                 value={child.gradeLevel}
                 onValueChange={(val) => handleUpdateChild(index, "gradeLevel", val)}
               >
-                <SelectTrigger id={`grade-${index}`} className="h-11">
+                <SelectTrigger id={`grade-${index}`} className="h-10">
                   <SelectValue placeholder="Select grade level" />
                 </SelectTrigger>
                 <SelectContent className="bg-popover z-50 max-h-[300px]">
@@ -107,7 +106,7 @@ const Step4 = ({ value, onChange }: Step4Props) => {
         {/* Ghost/Add Another Student Button */}
         <button
           onClick={handleAddChild}
-          className="w-full p-4 rounded-lg border-2 border-dashed border-border hover:border-primary hover:bg-accent/50 transition-all flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground"
+          className="w-full p-3 rounded-lg border-2 border-dashed border-border hover:border-primary hover:bg-accent/50 transition-all flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground"
         >
           <Plus className="h-5 w-5" />
           <span className="font-medium">Add another student</span>

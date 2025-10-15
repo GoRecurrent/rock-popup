@@ -18,10 +18,9 @@ const Step1 = ({
       onAutoAdvance?.();
     }, 300);
   };
-  return <div className="space-y-6">
+  return <div className="space-y-3">
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">Why are you considering Christian schooling for your student?</h2>
-        <p className="text-muted-foreground">Select the option that best describes your primary motivation.</p>
+        <h2 className="text-lg font-bold text-foreground mb-3">Why are you considering Christian schooling for your student?</h2>
       </div>
 
       <RadioGroup value={value} onValueChange={handleSelect} className="space-y-3">

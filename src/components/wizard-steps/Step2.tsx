@@ -24,12 +24,11 @@ const Step2 = ({ value, onChange, onAutoAdvance }: Step2Props) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">
+        <h2 className="text-lg font-bold text-foreground mb-3">
           Which topic concerns you the most?
         </h2>
-        <p className="text-muted-foreground">Help us understand your primary area of concern.</p>
       </div>
 
       <RadioGroup value={value} onValueChange={handleSelect} className="space-y-3">
