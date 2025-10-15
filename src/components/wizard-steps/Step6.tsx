@@ -53,21 +53,6 @@ const Step6 = ({
         </h2>
       </div>
 
-      <div className="space-y-1.5">
-        <Label htmlFor="email" className="text-sm font-medium">
-          Email Address
-        </Label>
-        <Input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => onEmailChange(e.target.value)}
-          placeholder="jessica.smith@example.com"
-          className="h-10"
-          required
-        />
-      </div>
-
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1.5">
           <Label htmlFor="parentName" className="text-sm font-medium">
@@ -98,6 +83,21 @@ const Step6 = ({
             required
           />
         </div>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="email" className="text-sm font-medium">
+          Email Address
+        </Label>
+        <Input
+          id="email"
+          type="email"
+          value={email}
+          onChange={(e) => onEmailChange(e.target.value)}
+          placeholder="jessica.smith@example.com"
+          className="h-10"
+          required
+        />
       </div>
 
       {phone && phone.replace(/\D/g, "").length !== 10 && phone.length > 0 && (
