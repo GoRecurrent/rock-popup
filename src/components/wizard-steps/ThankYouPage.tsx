@@ -62,7 +62,7 @@ const ThankYouPage = ({ formData, onClose }: ThankYouPageProps) => {
       </div>
 
       <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-        Thank you, {formData.step5FirstName}!
+        Thank you, {formData.step5ParentName.split(' ')[0]}!
       </h1>
 
       <p className="text-xl text-muted-foreground mb-8 max-w-2xl">

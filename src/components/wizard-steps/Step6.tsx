@@ -2,12 +2,10 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
 interface Step6Props {
-  firstName: string;
-  lastName: string;
+  parentName: string;
   email: string;
   phone: string;
-  onFirstNameChange: (value: string) => void;
-  onLastNameChange: (value: string) => void;
+  onParentNameChange: (value: string) => void;
   onEmailChange: (value: string) => void;
   onPhoneChange: (value: string) => void;
 }
@@ -26,12 +24,10 @@ const formatPhoneNumber = (value: string) => {
 };
 
 const Step6 = ({
-  firstName,
-  lastName,
+  parentName,
   email,
   phone,
-  onFirstNameChange,
-  onLastNameChange,
+  onParentNameChange,
   onEmailChange,
   onPhoneChange,
 }: Step6Props) => {
@@ -41,7 +37,7 @@ const Step6 = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">
           Your Contact Information
@@ -49,54 +45,38 @@ const Step6 = ({
         <p className="text-muted-foreground">We'll use this information to send you personalized recommendations.</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <Label htmlFor="firstName" className="text-base font-medium">
-            First Name *
-          </Label>
-          <Input
-            id="firstName"
-            value={firstName}
-            onChange={(e) => onFirstNameChange(e.target.value)}
-            placeholder="John"
-            className="h-12 text-base"
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="lastName" className="text-base font-medium">
-            Last Name *
-          </Label>
-          <Input
-            id="lastName"
-            value={lastName}
-            onChange={(e) => onLastNameChange(e.target.value)}
-            placeholder="Smith"
-            className="h-12 text-base"
-            required
-          />
-        </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="parentName" className="text-base font-medium">
+          Parent Name
+        </Label>
+        <Input
+          id="parentName"
+          value={parentName}
+          onChange={(e) => onParentNameChange(e.target.value)}
+          placeholder="Jessica Smith"
+          className="h-12 text-base"
+          required
+        />
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         <Label htmlFor="email" className="text-base font-medium">
-          Email Address *
+          Email Address
         </Label>
         <Input
           id="email"
           type="email"
           value={email}
           onChange={(e) => onEmailChange(e.target.value)}
-          placeholder="john.smith@example.com"
+          placeholder="jessica.smith@example.com"
           className="h-12 text-base"
           required
         />
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         <Label htmlFor="phone" className="text-base font-medium">
-          Phone Number *
+          Phone Number
         </Label>
         <Input
           id="phone"
