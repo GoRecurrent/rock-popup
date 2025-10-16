@@ -80,38 +80,40 @@ const Step4 = ({ value, onChange, onAutoAdvance }: Step4Props) => {
 
       {/* Current student form */}
       <div className="space-y-3">
-        <div className="space-y-2">
-          <Label htmlFor="student-name" className="text-sm font-medium">
-            Student's Name
-          </Label>
-          <Input
-            id="student-name"
-            value={currentStudent?.name || ""}
-            onChange={(e) => handleUpdateChild(activeStudentIndex, "name", e.target.value)}
-            placeholder="Enter student's name"
-            className="h-10"
-          />
-        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-2">
+            <Label htmlFor="student-name" className="text-sm font-medium">
+              Student's Name
+            </Label>
+            <Input
+              id="student-name"
+              value={currentStudent?.name || ""}
+              onChange={(e) => handleUpdateChild(activeStudentIndex, "name", e.target.value)}
+              placeholder="Enter student's name"
+              className="h-10"
+            />
+          </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="grade-level" className="text-sm font-medium">
-            Grade Level
-          </Label>
-          <Select
-            value={currentStudent?.gradeLevel || ""}
-            onValueChange={(val) => handleUpdateChild(activeStudentIndex, "gradeLevel", val)}
-          >
-            <SelectTrigger id="grade-level" className="h-10">
-              <SelectValue placeholder="Select grade level" />
-            </SelectTrigger>
-            <SelectContent className="bg-popover z-50 max-h-[300px]">
-              {gradeLevels.map((grade) => (
-                <SelectItem key={grade} value={grade}>
-                  {grade}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="space-y-2">
+            <Label htmlFor="grade-level" className="text-sm font-medium">
+              Grade Level
+            </Label>
+            <Select
+              value={currentStudent?.gradeLevel || ""}
+              onValueChange={(val) => handleUpdateChild(activeStudentIndex, "gradeLevel", val)}
+            >
+              <SelectTrigger id="grade-level" className="h-10">
+                <SelectValue placeholder="Select grade level" />
+              </SelectTrigger>
+              <SelectContent className="bg-popover z-50 max-h-[300px]">
+                {gradeLevels.map((grade) => (
+                  <SelectItem key={grade} value={grade}>
+                    {grade}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         {/* Add another student button */}
