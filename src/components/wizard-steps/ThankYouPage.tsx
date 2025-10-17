@@ -64,8 +64,7 @@ const ThankYouPage = ({
           </div>
         ) : webhookHtml ? (
           <div 
-            className="w-full max-w-[800px] mx-auto mb-8 text-left overflow-y-auto max-h-[60vh] pb-5 text-xl [&_*]:text-[#181818]"
-            style={{ fontFamily: 'inherit' }}
+            className="w-full max-w-[800px] mx-auto mb-8 text-left text-foreground overflow-y-auto max-h-[60vh]"
             dangerouslySetInnerHTML={{ __html: webhookHtml }}
           />
         ) : messages.length > 0 ? (
