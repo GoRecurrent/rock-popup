@@ -56,9 +56,12 @@ const WizardModal = () => {
   };
 
   const handleNext = async () => {
-    // If moving from step 5 to step 6, call webhook
+    // If moving from step 5 to step 6, advance immediately and call webhook in background
     if (currentStep === 5) {
+      setCurrentStep(6);
       setWebhookLoading(true);
+      
+      // Webhook call continues in background
       try {
         const response = await fetch("https://hook.us1.make.com/14hua75v7nvfdt6zzg44ejdye4ke1uij", {
           method: "POST",
@@ -81,8 +84,9 @@ const WizardModal = () => {
       } finally {
         setWebhookLoading(false);
       }
+    } else {
+      setCurrentStep((prev) => Math.min(prev + 1, 6));
     }
-    setCurrentStep((prev) => Math.min(prev + 1, 6));
   };
 
   const handleBack = () => {
