@@ -67,11 +67,17 @@ const WizardModal = () => {
           },
           body: JSON.stringify(formData),
         });
-        const html = await response.text();
-        setWebhookHtml(html);
+        
+        if (response.ok) {
+          const html = await response.text();
+          setWebhookHtml(html);
+        } else {
+          // 400 or other error - leave webhookHtml empty to show fallback
+          setWebhookHtml("");
+        }
       } catch (error) {
         console.error("Webhook error:", error);
-        setWebhookHtml("<p>Unable to load personalized content at this time.</p>");
+        setWebhookHtml("");
       } finally {
         setWebhookLoading(false);
       }

@@ -51,7 +51,7 @@ const ThankYouPage = ({
 
         <p className="text-xl text-muted-foreground mb-8">We're excited to help you learn more about Rock Academy. We'll reach out shortly to answer any questions and schedule a campus tour.</p>
 
-        {/* Personalized webhook response */}
+        {/* Personalized content area */}
         {webhookLoading ? (
           <div className="bg-accent/10 border border-accent/20 rounded-lg p-6 mb-8 w-full space-y-3">
             <Skeleton className="h-6 w-3/4" />
@@ -64,14 +64,14 @@ const ThankYouPage = ({
             className="bg-accent/10 border border-accent/20 rounded-lg p-6 mb-8 w-full text-left"
             dangerouslySetInnerHTML={{ __html: webhookHtml }}
           />
-        ) : null}
-
-        {messages.length > 0 && <div className="bg-accent/10 border border-accent/20 rounded-lg p-6 mb-8 w-full text-left space-y-4">
+        ) : messages.length > 0 ? (
+          <div className="bg-accent/10 border border-accent/20 rounded-lg p-6 mb-8 w-full text-left space-y-4">
             <h3 className="text-lg font-semibold text-foreground">Based on your responses:</h3>
             {messages.map((message, index) => <p key={index} className="text-foreground/90">
                 {message}
               </p>)}
-          </div>}
+          </div>
+        ) : null}
 
         <div className="space-y-4 text-muted-foreground w-full">
           {formData.step4ParentGuide === "yes" && <p>
