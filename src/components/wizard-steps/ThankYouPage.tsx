@@ -54,17 +54,17 @@ const ThankYouPage = ({
         {/* Personalized content area */}
         {webhookLoading ? (
           <div className="w-full max-w-[800px] mx-auto mb-8 space-y-4">
-            <Skeleton className="h-6 w-3/4" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-5/6" />
-            <Skeleton className="h-4 w-4/5" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-6 w-3/4 bg-muted/80" />
+            <Skeleton className="h-4 w-full bg-muted/80" />
+            <Skeleton className="h-4 w-full bg-muted/80" />
+            <Skeleton className="h-4 w-5/6 bg-muted/80" />
+            <Skeleton className="h-4 w-4/5 bg-muted/80" />
+            <Skeleton className="h-4 w-full bg-muted/80" />
+            <Skeleton className="h-4 w-3/4 bg-muted/80" />
           </div>
         ) : webhookHtml ? (
           <div 
-            className="w-full max-w-[800px] mx-auto mb-8 text-left overflow-y-auto max-h-[60vh] pb-[30px] text-xl text-muted-foreground [&_a]:underline [&_a]:text-primary [&_a]:font-bold"
+            className="w-full max-w-[800px] mx-auto mb-8 text-left overflow-y-auto max-h-[60vh] pb-[30px] text-xl text-muted-foreground [&_a]:underline [&_a]:text-primary [&_strong]:text-[#181818] [&_p]:pb-[15px]"
             style={{ fontFamily: 'inherit' }}
             dangerouslySetInnerHTML={{ __html: webhookHtml }}
           />
