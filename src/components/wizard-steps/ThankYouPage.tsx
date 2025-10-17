@@ -64,7 +64,7 @@ const ThankYouPage = ({
           </div>
         ) : webhookHtml ? (
           <div 
-            className="w-full max-w-[800px] mx-auto mb-8 text-left overflow-y-auto max-h-[60vh] pb-[30px] text-xl [&_*]:!text-[#181818]"
+            className="w-full max-w-[800px] mx-auto mb-8 text-left overflow-y-auto max-h-[60vh] pb-[30px] text-xl text-muted-foreground [&_a]:underline [&_a]:text-primary [&_a]:font-bold"
             style={{ fontFamily: 'inherit' }}
             dangerouslySetInnerHTML={{ __html: webhookHtml }}
           />
