@@ -49,7 +49,7 @@ const ThankYouPage = ({
           Thank you, {formData.step5ParentName.split(' ')[0]}!
         </h1>
 
-        <p className="text-xl text-muted-foreground mb-8">We're excited to help you learn more about Rock Academy. We'll reach out shortly to answer any questions and schedule a campus tour.</p>
+        <p className="text-xl text-muted-foreground mb-8">We're excited to help you learn more about Rock Academy. We'll reach out shortly to answer any questions and schedule a <a href="https://calendly.com/admissions-nlg" target="_blank" rel="noopener noreferrer" className="underline">campus tour</a>.</p>
 
         {/* Personalized content area */}
         {webhookLoading ? (
@@ -64,7 +64,8 @@ const ThankYouPage = ({
           </div>
         ) : webhookHtml ? (
           <div 
-            className="w-full max-w-[800px] mx-auto mb-8 text-left text-foreground overflow-y-auto max-h-[60vh]"
+            className="w-full max-w-[800px] mx-auto mb-8 text-left overflow-y-auto max-h-[60vh] pb-[30px] text-xl [&_*]:!text-[#181818]"
+            style={{ fontFamily: 'inherit' }}
             dangerouslySetInnerHTML={{ __html: webhookHtml }}
           />
         ) : messages.length > 0 ? (
