@@ -1,13 +1,18 @@
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { WizardFormData } from "../WizardModal";
 interface ThankYouPageProps {
   formData: WizardFormData;
   onClose: () => void;
+  webhookHtml: string;
+  webhookLoading: boolean;
 }
 const ThankYouPage = ({
   formData,
-  onClose
+  onClose,
+  webhookHtml,
+  webhookLoading
 }: ThankYouPageProps) => {
   const getPersonalizedMessage = () => {
     const messages = [];
@@ -46,7 +51,20 @@ const ThankYouPage = ({
 
         <p className="text-xl text-muted-foreground mb-8">We're excited to help you learn more about Rock Academy. We'll reach out shortly to answer any questions and schedule a campus tour.</p>
 
-        
+        {/* Personalized webhook response */}
+        {webhookLoading ? (
+          <div className="bg-accent/10 border border-accent/20 rounded-lg p-6 mb-8 w-full space-y-3">
+            <Skeleton className="h-6 w-3/4" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-5/6" />
+          </div>
+        ) : webhookHtml ? (
+          <div 
+            className="bg-accent/10 border border-accent/20 rounded-lg p-6 mb-8 w-full text-left"
+            dangerouslySetInnerHTML={{ __html: webhookHtml }}
+          />
+        ) : null}
 
         {messages.length > 0 && <div className="bg-accent/10 border border-accent/20 rounded-lg p-6 mb-8 w-full text-left space-y-4">
             <h3 className="text-lg font-semibold text-foreground">Based on your responses:</h3>

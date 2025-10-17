@@ -27,6 +27,8 @@ const WizardModal = () => {
   const [open, setOpen] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const [webhookHtml, setWebhookHtml] = useState<string>("");
+  const [webhookLoading, setWebhookLoading] = useState(false);
   const [formData, setFormData] = useState<WizardFormData>({
     step1: "",
     step2: "",
@@ -53,7 +55,27 @@ const WizardModal = () => {
     setOpen(false);
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    // If moving from step 5 to step 6, call webhook
+    if (currentStep === 5) {
+      setWebhookLoading(true);
+      try {
+        const response = await fetch("https://hook.us1.make.com/14hua75v7nvfdt6zzg44ejdye4ke1uij", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+        const html = await response.text();
+        setWebhookHtml(html);
+      } catch (error) {
+        console.error("Webhook error:", error);
+        setWebhookHtml("<p>Unable to load personalized content at this time.</p>");
+      } finally {
+        setWebhookLoading(false);
+      }
+    }
     setCurrentStep((prev) => Math.min(prev + 1, 6));
   };
 
@@ -116,7 +138,7 @@ const WizardModal = () => {
           />
         );
       case 6:
-        return <ThankYouPage formData={formData} onClose={handleClose} />;
+        return <ThankYouPage formData={formData} onClose={handleClose} webhookHtml={webhookHtml} webhookLoading={webhookLoading} />;
       default:
         return null;
     }
