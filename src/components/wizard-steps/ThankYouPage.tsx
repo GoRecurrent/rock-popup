@@ -54,13 +54,13 @@ const ThankYouPage = ({
         {/* Personalized content area */}
         {webhookLoading ? (
           <div className="w-full max-w-[800px] mx-auto mb-8 space-y-4">
-            <Skeleton className="h-6 w-3/4 bg-muted/50" />
-            <Skeleton className="h-4 w-full bg-muted/50" />
-            <Skeleton className="h-4 w-full bg-muted/50" />
-            <Skeleton className="h-4 w-5/6 bg-muted/50" />
-            <Skeleton className="h-4 w-4/5 bg-muted/50" />
-            <Skeleton className="h-4 w-full bg-muted/50" />
-            <Skeleton className="h-4 w-3/4 bg-muted/50" />
+            <Skeleton className="h-6 w-3/4 bg-foreground/15" />
+            <Skeleton className="h-4 w-full bg-foreground/15" />
+            <Skeleton className="h-4 w-full bg-foreground/15" />
+            <Skeleton className="h-4 w-5/6 bg-foreground/15" />
+            <Skeleton className="h-4 w-4/5 bg-foreground/15" />
+            <Skeleton className="h-4 w-full bg-foreground/15" />
+            <Skeleton className="h-4 w-3/4 bg-foreground/15" />
           </div>
         ) : webhookHtml ? (
           <div 
