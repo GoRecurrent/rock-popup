@@ -5,24 +5,24 @@ import { Button } from "@/components/ui/button";
 import WizardProgress from "./WizardProgress";
 import Step1 from "./wizard-steps/Step1";
 import Step2 from "./wizard-steps/Step2";
-
 import Step4 from "./wizard-steps/Step4";
 import Step5 from "./wizard-steps/Step5";
 import Step6 from "./wizard-steps/Step6";
 import ThankYouPage from "./wizard-steps/ThankYouPage";
 const DISMISSED_KEY = "rockPopupDismissed";
-
 export interface WizardFormData {
   step1: string;
   step2: string;
-  step3: { name: string; gradeLevel: string }[];
+  step3: {
+    name: string;
+    gradeLevel: string;
+  }[];
   step4ParentGuide: string;
   step4Questions: string;
   step5ParentName: string;
   step5Email: string;
   step5Phone: string;
 }
-
 const WizardModal = () => {
   const [open, setOpen] = useState(false);
   const [dismissed, setDismissed] = useState(false);
@@ -33,14 +33,16 @@ const WizardModal = () => {
   const [formData, setFormData] = useState<WizardFormData>({
     step1: "",
     step2: "",
-    step3: [{ name: "", gradeLevel: "" }],
+    step3: [{
+      name: "",
+      gradeLevel: ""
+    }],
     step4ParentGuide: "",
     step4Questions: "",
     step5ParentName: "",
     step5Email: "",
-    step5Phone: "",
+    step5Phone: ""
   });
-
   useEffect(() => {
     const flag = localStorage.getItem(DISMISSED_KEY);
     if (flag === "1") {
@@ -49,13 +51,11 @@ const WizardModal = () => {
       setOpen(true);
     }
   }, []);
-
   const handleClose = () => {
     localStorage.setItem(DISMISSED_KEY, "1");
     setDismissed(true);
     setOpen(false);
   };
-
   const handleNext = async () => {
     // If moving from step 4 to step 5, fire first webhook (fire and forget)
     if (currentStep === 4) {
@@ -63,7 +63,7 @@ const WizardModal = () => {
       fetch("https://hook.us1.make.com/14hua75v7nvfdt6zzg44ejdye4ke1uij", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           request_id: requestId,
@@ -71,26 +71,26 @@ const WizardModal = () => {
           step2: formData.step2,
           step3: formData.step3,
           step4ParentGuide: formData.step4ParentGuide,
-          step4Questions: formData.step4Questions,
-        }),
+          step4Questions: formData.step4Questions
+        })
       }).catch(error => console.error("First webhook error:", error));
-      
+
       // Immediately advance to next step
       setCurrentStep(5);
       return;
     }
-    
+
     // If moving from step 5 to step 6, advance immediately and call second webhook
     if (currentStep === 5) {
       setCurrentStep(6);
       setWebhookLoading(true);
-      
+
       // Second webhook call with ALL form data
       try {
         const response = await fetch("https://hook.us1.make.com/lzemjgu6t8r4ea8zsmuvdot7ltqfdu1q", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
           },
           body: JSON.stringify({
             request_id: requestId,
@@ -101,10 +101,9 @@ const WizardModal = () => {
             step4Questions: formData.step4Questions,
             step5ParentName: formData.step5ParentName,
             step5Email: formData.step5Email,
-            step5Phone: formData.step5Phone,
-          }),
+            step5Phone: formData.step5Phone
+          })
         });
-        
         if (response.ok) {
           const html = await response.text();
           setWebhookHtml(html);
@@ -120,19 +119,19 @@ const WizardModal = () => {
       }
       return;
     }
-    
+
     // For all other steps, just advance normally
-    setCurrentStep((prev) => Math.min(prev + 1, 6));
+    setCurrentStep(prev => Math.min(prev + 1, 6));
   };
-
   const handleBack = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 1));
+    setCurrentStep(prev => Math.max(prev - 1, 1));
   };
-
   const updateFormData = (data: Partial<WizardFormData>) => {
-    setFormData((prev) => ({ ...prev, ...data }));
+    setFormData(prev => ({
+      ...prev,
+      ...data
+    }));
   };
-
   const isStepValid = () => {
     switch (currentStep) {
       case 1:
@@ -144,86 +143,68 @@ const WizardModal = () => {
       case 4:
         return formData.step4ParentGuide !== "";
       case 5:
-        return (
-          formData.step5ParentName !== "" &&
-          formData.step5Email !== "" &&
-          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.step5Email) &&
-          formData.step5Phone.replace(/\D/g, "").length === 10
-        );
+        return formData.step5ParentName !== "" && formData.step5Email !== "" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.step5Email) && formData.step5Phone.replace(/\D/g, "").length === 10;
       default:
         return true;
     }
   };
-
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <Step1 value={formData.step1} onChange={(value) => updateFormData({ step1: value })} onAutoAdvance={handleNext} />;
+        return <Step1 value={formData.step1} onChange={value => updateFormData({
+          step1: value
+        })} onAutoAdvance={handleNext} />;
       case 2:
-        return <Step2 value={formData.step2} onChange={(value) => updateFormData({ step2: value })} onAutoAdvance={handleNext} />;
+        return <Step2 value={formData.step2} onChange={value => updateFormData({
+          step2: value
+        })} onAutoAdvance={handleNext} />;
       case 3:
-        return <Step4 value={formData.step3} onChange={(value) => updateFormData({ step3: value })} onAutoAdvance={handleNext} />;
+        return <Step4 value={formData.step3} onChange={value => updateFormData({
+          step3: value
+        })} onAutoAdvance={handleNext} />;
       case 4:
-        return (
-          <Step5
-            questions={formData.step4Questions}
-            onQuestionsChange={(value) => updateFormData({ step4Questions: value })}
-            onAutoAdvance={handleNext}
-          />
-        );
+        return <Step5 questions={formData.step4Questions} onQuestionsChange={value => updateFormData({
+          step4Questions: value
+        })} onAutoAdvance={handleNext} />;
       case 5:
-        return (
-          <Step6
-            parentName={formData.step5ParentName}
-            email={formData.step5Email}
-            phone={formData.step5Phone}
-            onParentNameChange={(value) => updateFormData({ step5ParentName: value })}
-            onEmailChange={(value) => updateFormData({ step5Email: value })}
-            onPhoneChange={(value) => updateFormData({ step5Phone: value })}
-            onAutoAdvance={handleNext}
-          />
-        );
+        return <Step6 parentName={formData.step5ParentName} email={formData.step5Email} phone={formData.step5Phone} onParentNameChange={value => updateFormData({
+          step5ParentName: value
+        })} onEmailChange={value => updateFormData({
+          step5Email: value
+        })} onPhoneChange={value => updateFormData({
+          step5Phone: value
+        })} onAutoAdvance={handleNext} />;
       case 6:
         return <ThankYouPage formData={formData} onClose={handleClose} webhookHtml={webhookHtml} webhookLoading={webhookLoading} />;
       default:
         return null;
     }
   };
-
   if (dismissed) {
     return null;
   }
-
-  return (
-    <Dialog open={open} onOpenChange={() => {}}>
+  return <Dialog open={open} onOpenChange={() => {}}>
       <DialogContent className={`${currentStep === 6 ? 'max-w-full w-[95vw] h-[95vh]' : 'max-w-[800px] h-[90vh] sm:h-[500px]'} p-0 gap-0 bg-background border-0 overflow-hidden`}>
-        <button
-          onClick={handleClose}
-          className="absolute right-4 top-4 z-50 rounded-sm bg-wizard-sidebar text-white p-1.5 transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-        >
+        <button onClick={handleClose} className="absolute right-4 top-4 z-50 rounded-sm bg-wizard-sidebar text-white p-1.5 transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
           <X className="h-5 w-5" />
           <span className="sr-only">Close</span>
         </button>
 
         <div className="flex flex-col sm:flex-row h-full">
           {/* Left Sidebar */}
-          {currentStep < 6 && (
-            <div className="sm:w-[45%] bg-wizard-sidebar p-6 sm:p-8 lg:p-10 flex flex-col text-primary-foreground">
+          {currentStep < 6 && <div className="sm:w-[45%] bg-wizard-sidebar p-6 sm:p-8 lg:p-10 flex flex-col text-primary-foreground">
               <img src="/rock-logo.webp" alt="Rock Academy Logo" className="h-12 sm:h-20 w-auto object-contain mb-6 sm:mb-12 self-start" />
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-3 sm:mb-5 leading-tight text-left">
                 Is the Rock Academy the right fit for you?
               </h1>
-              <p className="text-base sm:text-lg lg:text-xl opacity-90 text-left">Get personalized answers in 30 seconds.</p>
-            </div>
-          )}
+              <p className="text-base lg:text-xl opacity-90 text-left sm:text-xl">Get personalized answers in 30 seconds.</p>
+            </div>}
 
           {/* Right Content Area */}
           <div className={`${currentStep === 6 ? 'w-full' : 'sm:w-[55%]'} bg-background flex flex-col h-full`}>
-            {currentStep < 6 && (
-              <div className="p-4 pt-12 border-b border-border shrink-0">
+            {currentStep < 6 && <div className="p-4 pt-12 border-b border-border shrink-0">
                 <WizardProgress currentStep={currentStep} totalSteps={5} />
-              </div>
-            )}
+              </div>}
 
             <div className="flex-1 overflow-y-auto min-h-0">
               {currentStep === 6 ? renderStep() : <div className="p-4">{renderStep()}</div>}
@@ -231,8 +212,6 @@ const WizardModal = () => {
           </div>
         </div>
       </DialogContent>
-    </Dialog>
-  );
+    </Dialog>;
 };
-
 export default WizardModal;
