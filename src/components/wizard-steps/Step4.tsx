@@ -89,14 +89,14 @@ const Step4 = ({ value, onChange, onAutoAdvance }: Step4Props) => {
               id="student-name"
               value={currentStudent?.name || ""}
               onChange={(e) => handleUpdateChild(activeStudentIndex, "name", e.target.value)}
-              placeholder="Enter student's name"
+              placeholder="Enter full name (e.g. Kim Brooks)"
               className="h-10"
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="grade-level" className="text-sm font-medium">
-              Grade Level
+              Grade Level for 2026-2027
             </Label>
             <Select
               value={currentStudent?.gradeLevel || ""}
