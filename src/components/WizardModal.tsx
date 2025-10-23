@@ -202,12 +202,12 @@ const WizardModal = () => {
 
           {/* Right Content Area */}
           <div className={`${currentStep === 6 ? 'w-full' : 'sm:w-[55%]'} bg-background flex flex-col h-full`}>
-            {currentStep < 6 && <div className="p-4 pt-12 border-b border-border shrink-0">
+            {currentStep < 6 && <div className="hidden sm:block p-4 pt-12 border-b border-border shrink-0">
                 <WizardProgress currentStep={currentStep} totalSteps={5} />
               </div>}
 
             <div className="flex-1 overflow-y-auto min-h-0">
-              {currentStep === 6 ? renderStep() : <div className="p-4">{renderStep()}</div>}
+              {currentStep === 6 ? renderStep() : <div className="p-4 sm:p-4 pt-2">{renderStep()}</div>}
             </div>
           </div>
         </div>
