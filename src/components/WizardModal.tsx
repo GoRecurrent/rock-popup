@@ -27,6 +27,7 @@ const WizardModal = () => {
   const [open, setOpen] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const [requestId] = useState(() => crypto.randomUUID());
   const [webhookHtml, setWebhookHtml] = useState<string>("");
   const [webhookLoading, setWebhookLoading] = useState(false);
   const [formData, setFormData] = useState<WizardFormData>({
@@ -56,19 +57,52 @@ const WizardModal = () => {
   };
 
   const handleNext = async () => {
-    // If moving from step 5 to step 6, advance immediately and call webhook in background
+    // If moving from step 4 to step 5, fire first webhook (fire and forget)
+    if (currentStep === 4) {
+      // Fire and forget webhook call with all data collected so far
+      fetch("https://hook.us1.make.com/14hua75v7nvfdt6zzg44ejdye4ke1uij", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          request_id: requestId,
+          step1: formData.step1,
+          step2: formData.step2,
+          step3: formData.step3,
+          step4ParentGuide: formData.step4ParentGuide,
+          step4Questions: formData.step4Questions,
+        }),
+      }).catch(error => console.error("First webhook error:", error));
+      
+      // Immediately advance to next step
+      setCurrentStep(5);
+      return;
+    }
+    
+    // If moving from step 5 to step 6, advance immediately and call second webhook
     if (currentStep === 5) {
       setCurrentStep(6);
       setWebhookLoading(true);
       
-      // Webhook call continues in background
+      // Second webhook call with ALL form data
       try {
-        const response = await fetch("https://hook.us1.make.com/14hua75v7nvfdt6zzg44ejdye4ke1uij", {
+        const response = await fetch("https://hook.us1.make.com/lzemjgu6t8r4ea8zsmuvdot7ltqfdu1q", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+            request_id: requestId,
+            step1: formData.step1,
+            step2: formData.step2,
+            step3: formData.step3,
+            step4ParentGuide: formData.step4ParentGuide,
+            step4Questions: formData.step4Questions,
+            step5ParentName: formData.step5ParentName,
+            step5Email: formData.step5Email,
+            step5Phone: formData.step5Phone,
+          }),
         });
         
         if (response.ok) {
@@ -79,14 +113,16 @@ const WizardModal = () => {
           setWebhookHtml("");
         }
       } catch (error) {
-        console.error("Webhook error:", error);
+        console.error("Second webhook error:", error);
         setWebhookHtml("");
       } finally {
         setWebhookLoading(false);
       }
-    } else {
-      setCurrentStep((prev) => Math.min(prev + 1, 6));
+      return;
     }
+    
+    // For all other steps, just advance normally
+    setCurrentStep((prev) => Math.min(prev + 1, 6));
   };
 
   const handleBack = () => {
