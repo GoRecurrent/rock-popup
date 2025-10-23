@@ -48,7 +48,7 @@ const Step6 = ({
   return (
     <div className="space-y-3">
       <div>
-        <h2 className="text-lg font-bold text-foreground mb-3">
+        <h2 className="text-lg font-bold text-foreground mb-3 pt-[15px] sm:pt-0">
           Your Contact Information
         </h2>
       </div>

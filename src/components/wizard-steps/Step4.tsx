@@ -54,7 +54,7 @@ const Step4 = ({ value, onChange, onAutoAdvance }: Step4Props) => {
   return (
     <div className="space-y-3">
       <div>
-        <h2 className="text-lg font-bold text-foreground mb-3">
+        <h2 className="text-lg font-bold text-foreground mb-3 pt-[15px] sm:pt-0">
           What is the name and grade level of your student(s)?
         </h2>
       </div>

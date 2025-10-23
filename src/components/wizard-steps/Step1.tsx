@@ -20,7 +20,7 @@ const Step1 = ({
   };
   return <div className="space-y-3">
       <div>
-        <h2 className="text-lg font-bold text-foreground mb-3">Why are you considering Christian schooling for your student?</h2>
+        <h2 className="text-lg font-bold text-foreground mb-3 pt-[15px] sm:pt-0">Why are you considering Christian schooling for your student?</h2>
       </div>
 
       <RadioGroup value={value} onValueChange={handleSelect} className="space-y-3">

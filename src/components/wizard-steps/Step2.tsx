@@ -26,7 +26,7 @@ const Step2 = ({ value, onChange, onAutoAdvance }: Step2Props) => {
   return (
     <div className="space-y-3">
       <div>
-        <h2 className="text-lg font-bold text-foreground mb-3">
+        <h2 className="text-lg font-bold text-foreground mb-3 pt-[15px] sm:pt-0">
           Which topic concerns you the most?
         </h2>
       </div>
