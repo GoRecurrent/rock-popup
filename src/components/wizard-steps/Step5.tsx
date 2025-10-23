@@ -13,20 +13,17 @@ const Step5 = ({ questions, onQuestionsChange, onAutoAdvance }: Step5Props) => {
     <div className="space-y-3">
       <div>
         <h2 className="text-lg font-bold text-foreground mb-3">
-          Additional Information
+          Do you have any additional questions?
         </h2>
 
         <div className="space-y-3">
           <div>
-            <Label htmlFor="questions" className="text-sm font-medium mb-2 block">
-              Do you have any additional questions? (Optional)
-            </Label>
             <Textarea
               id="questions"
               value={questions}
               onChange={(e) => onQuestionsChange(e.target.value)}
               placeholder="Please share any questions or concerns you'd like us to address..."
-              className="min-h-[80px] resize-none"
+              className="min-h-[120px] resize-none"
             />
           </div>
 
