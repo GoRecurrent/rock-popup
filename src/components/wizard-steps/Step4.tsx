@@ -55,7 +55,7 @@ const Step4 = ({ value, onChange, onAutoAdvance }: Step4Props) => {
     <div className="space-y-3">
       <div>
         <h2 className="text-lg font-bold text-foreground mb-3">
-          What is the name and grade level of your student(s) for 2026-2027 school year?
+          What is the name and grade level of your student(s)?
         </h2>
       </div>
 
