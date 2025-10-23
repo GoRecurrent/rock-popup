@@ -194,15 +194,19 @@ const WizardModal = () => {
           {/* Left Sidebar */}
           {currentStep < 6 && <div className="sm:w-[45%] bg-wizard-sidebar p-6 sm:p-8 lg:p-10 flex flex-col text-primary-foreground">
               <img src="/rock-logo.webp" alt="Rock Academy Logo" className="h-12 sm:h-20 w-auto object-contain mb-6 sm:mb-12 self-start" />
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-3 sm:mb-5 leading-tight text-left">
-                Is the Rock Academy the right fit for you?
-              </h1>
-              <p className="text-base lg:text-xl opacity-90 text-left sm:text-xl">Get personalized answers in 30 seconds.</p>
+              {currentStep === 1 && (
+                <>
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-3 sm:mb-5 leading-tight text-left">
+                    Is the Rock Academy the right fit for you?
+                  </h1>
+                  <p className="text-base lg:text-xl opacity-90 text-left sm:text-xl">Get personalized answers in 30 seconds.</p>
+                </>
+              )}
             </div>}
 
           {/* Right Content Area */}
           <div className={`${currentStep === 6 ? 'w-full' : 'sm:w-[55%]'} bg-background flex flex-col h-full`}>
-            {currentStep < 6 && <div className="hidden sm:block p-4 pt-12 border-b border-border shrink-0">
+            {currentStep < 6 && currentStep > 1 && <div className="block sm:block p-4 pt-12 border-b border-border shrink-0">
                 <WizardProgress currentStep={currentStep} totalSteps={5} />
               </div>}
 

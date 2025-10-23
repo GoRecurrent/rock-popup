@@ -80,7 +80,7 @@ const Step4 = ({ value, onChange, onAutoAdvance }: Step4Props) => {
 
       {/* Current student form */}
       <div className="space-y-3">
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="space-y-2">
             <Label htmlFor="student-name" className="text-sm font-medium">
               Student's Full Name
