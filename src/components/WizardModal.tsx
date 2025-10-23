@@ -195,11 +195,9 @@ const WizardModal = () => {
           {currentStep < 6 && <div className="sm:w-[45%] bg-wizard-sidebar p-6 sm:p-8 lg:p-10 flex flex-col text-primary-foreground">
               <img src="/rock-logo.webp" alt="Rock Academy Logo" className={`h-12 sm:h-20 w-auto object-contain self-start ${currentStep === 1 ? 'mb-6 sm:mb-12' : 'mb-3 sm:mb-12'}`} />
               <div className={currentStep === 1 ? 'block' : 'hidden sm:block'}>
-                <div className={currentStep === 1 ? 'hidden sm:block relative p-4 -mx-4 rounded-xl border-2 border-button-accent/40' : ''} style={currentStep === 1 ? { animation: 'attention-pulse 2.5s ease-in-out infinite' } : {}}>
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-3 sm:mb-5 leading-tight text-left">
-                    Is the Rock Academy the right fit for you?
-                  </h1>
-                </div>
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-3 sm:mb-5 leading-tight text-left">
+                  Is the Rock Academy the right fit for you?
+                </h1>
                 <p className="text-base lg:text-xl opacity-90 text-left sm:text-xl">Get personalized answers in 30 seconds.</p>
               </div>
             </div>}
