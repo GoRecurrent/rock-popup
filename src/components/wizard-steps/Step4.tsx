@@ -83,20 +83,20 @@ const Step4 = ({ value, onChange, onAutoAdvance }: Step4Props) => {
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-2">
             <Label htmlFor="student-name" className="text-sm font-medium">
-              Student's Name
+              Student's Full Name
             </Label>
             <Input
               id="student-name"
               value={currentStudent?.name || ""}
               onChange={(e) => handleUpdateChild(activeStudentIndex, "name", e.target.value)}
-              placeholder="Enter full name (e.g. Kim Brooks)"
+              placeholder="Enter first & last name"
               className="h-10"
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="grade-level" className="text-sm font-medium">
-              Grade Level for 2026-2027
+              Grade Level (2026-2027)
             </Label>
             <Select
               value={currentStudent?.gradeLevel || ""}
