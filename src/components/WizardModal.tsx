@@ -53,9 +53,17 @@ const WizardModal = () => {
     step5Phone: ""
   });
   useEffect(() => {
+    // Detect if running in iframe and add class to body
+    const isIframe = window.self !== window.top;
+    if (isIframe) {
+      document.body.classList.add('iframe-mode');
+    }
+    
     const flag = localStorage.getItem(DISMISSED_KEY);
     if (flag === "1") {
       setDismissed(true);
+      // Mark body as dismissed for styling
+      document.body.classList.add('popup-dismissed');
     } else {
       setOpen(true);
       // Track popup display when it opens
@@ -67,6 +75,9 @@ const WizardModal = () => {
     localStorage.setItem(DISMISSED_KEY, "1");
     setDismissed(true);
     setOpen(false);
+    
+    // Add class to body to make everything transparent and non-interactive
+    document.body.classList.add('popup-dismissed');
     
     // Notify parent window to remove iframe (if embedded)
     notifyParentToClose();

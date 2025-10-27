@@ -127,4 +127,19 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* When embedded in iframe, make background transparent by default */
+  body.iframe-mode {
+    @apply bg-transparent;
+  }
+  
+  /* When popup is dismissed, hide everything and disable interactions */
+  body.popup-dismissed {
+    @apply bg-transparent;
+    pointer-events: none !important;
+  }
+  
+  body.popup-dismissed * {
+    pointer-events: none !important;
+  }
 }
