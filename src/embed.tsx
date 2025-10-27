@@ -4,34 +4,38 @@ import App from './App';
 import './index.css';
 import { initializeGA4 } from './utils/analytics';
 
-// Function to get client_id from multiple sources
-const getClientIdAndConfig = (): { clientId?: string; pageLocation?: string } => {
-  // 1. Check URL parameters
+// Function to get client_id and config from multiple sources
+const getClientIdAndConfig = (): { clientId?: string; pageLocation?: string; origin?: string } => {
+  // 1. Check URL parameters (primary method)
   const urlParams = new URLSearchParams(window.location.search);
-  const urlClientId = urlParams.get('clientId') || urlParams.get('client_id');
+  const urlClientId = urlParams.get('client_id') || urlParams.get('clientId');
   const urlPageLocation = urlParams.get('pageLocation') || urlParams.get('page_location');
+  const urlOrigin = urlParams.get('origin');
 
-  // 2. Check window config (set by parent page script)
+  // 2. Check window config (fallback for script embed)
   const configClientId = window.rockPopupConfig?.clientId;
   const configPageLocation = window.rockPopupConfig?.pageLocation;
+  const configOrigin = window.rockPopupConfig?.origin;
 
   return {
     clientId: urlClientId || configClientId,
     pageLocation: urlPageLocation || configPageLocation,
+    origin: urlOrigin || configOrigin,
   };
 };
 
 // Get initial config
 let config = getClientIdAndConfig();
 
-// Listen for postMessage from parent window (for iframe embed)
+// Listen for postMessage from parent window (for iframe embed - fallback method)
 window.addEventListener('message', (event) => {
-  // For production, add origin validation:
-  // if (event.origin !== 'https://your-parent-domain.com') return;
+  // For production, optionally validate origin:
+  // if (event.origin !== config.origin) return;
   
   if (event.data && event.data.type === 'rockPopupConfig') {
-    const newClientId = event.data.clientId || event.data.client_id;
+    const newClientId = event.data.client_id || event.data.clientId;
     const newPageLocation = event.data.pageLocation || event.data.page_location;
+    const newOrigin = event.data.origin;
     
     // Update config if new values provided
     if (newClientId) {
@@ -39,6 +43,9 @@ window.addEventListener('message', (event) => {
     }
     if (newPageLocation) {
       config.pageLocation = newPageLocation;
+    }
+    if (newOrigin) {
+      config.origin = newOrigin;
     }
 
     // Reinitialize GA4 with new client_id
@@ -52,9 +59,11 @@ window.addEventListener('message', (event) => {
 window.rockPopupConfig = {
   clientId: config.clientId,
   pageLocation: config.pageLocation,
+  origin: config.origin,
 };
 
-// Initialize GA4 with client_id
+// Initialize GA4 with client_id from main site
+// Measurement ID: G-673KD4D1H5
 initializeGA4(config.clientId);
 
 // Mount the app

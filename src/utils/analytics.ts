@@ -5,6 +5,7 @@ declare global {
     rockPopupConfig?: {
       clientId?: string;
       pageLocation?: string;
+      origin?: string;
     };
   }
 }

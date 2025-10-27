@@ -4,10 +4,21 @@ This guide explains how to embed the Rock Academy popup on your parent website w
 
 ## Client ID Passing Methods
 
-The popup supports receiving client_id via three methods:
-1. **URL Parameters** - `?clientId=xxx&pageLocation=xxx`
-2. **postMessage API** - For iframe communication
-3. **Script Config** - `window.rockPopupConfig` object
+The popup supports receiving client_id via URL parameters (primary method) and postMessage (fallback):
+
+### Expected URL Parameters
+- `client_id` - GA4 client ID from the main site (required)
+- `origin` - Origin URL of the main site, e.g., `https://www.therockacademy.org` (optional)
+
+Example popup URL:
+```
+https://rock-popup.lovable.app/?client_id=XYZ123&origin=https%3A%2F%2Fwww.therockacademy.org
+```
+
+The popup will:
+1. Read `client_id` and `origin` from URL parameters on load
+2. Initialize GA4 (Measurement ID: G-673KD4D1H5) with the provided `client_id`
+3. Track all user interactions with GA4 events using this `client_id` for proper attribution
 
 ## Google Tag Manager (GTM) Integration (Recommended)
 
@@ -139,7 +150,7 @@ Embed as an iframe with client_id passed via URL:
 ```html
 <iframe 
   id="rockPopupIframe"
-  src="https://your-popup-domain.com/?clientId=YOUR_CLIENT_ID&pageLocation=YOUR_PAGE" 
+  src="https://rock-popup.lovable.app/?client_id=YOUR_CLIENT_ID&origin=https%3A%2F%2Fwww.therockacademy.org" 
   style="position: fixed; bottom: 0; right: 0; width: 100%; height: 100%; border: none; z-index: 9999;"
   allow="clipboard-write">
 </iframe>
@@ -152,20 +163,20 @@ For dynamic client_id updates, use postMessage:
 ```html
 <iframe 
   id="rockPopupIframe"
-  src="https://your-popup-domain.com/" 
+  src="https://rock-popup.lovable.app/" 
   style="position: fixed; bottom: 0; right: 0; width: 100%; height: 100%; border: none; z-index: 9999;"
   allow="clipboard-write">
 </iframe>
 
 <script>
-  // Get GA4 client_id and send to iframe
+  // Get GA4 client_id and send to iframe (fallback method)
   window.gtag('get', 'YOUR_GA4_MEASUREMENT_ID', 'client_id', function(clientId) {
     const iframe = document.getElementById('rockPopupIframe');
     iframe.contentWindow.postMessage({
       type: 'rockPopupConfig',
-      clientId: clientId,
-      pageLocation: window.location.href
-    }, 'https://your-popup-domain.com');
+      client_id: clientId,
+      origin: window.location.origin
+    }, 'https://rock-popup.lovable.app');
   });
 </script>
 ```
