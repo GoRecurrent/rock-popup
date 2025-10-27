@@ -53,6 +53,16 @@ const WizardModal = () => {
     step5Phone: ""
   });
   useEffect(() => {
+    // Check for reset/force show parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const forceShow = urlParams.get('forceShow') === 'true' || urlParams.get('reset') === 'true';
+    
+    // If force show parameter is present, clear dismissed state
+    if (forceShow) {
+      localStorage.removeItem(DISMISSED_KEY);
+      document.body.classList.remove('popup-dismissed');
+    }
+    
     // Detect if running in iframe and add class to body
     const isIframe = window.self !== window.top;
     if (isIframe) {
@@ -60,7 +70,7 @@ const WizardModal = () => {
     }
     
     const flag = localStorage.getItem(DISMISSED_KEY);
-    if (flag === "1") {
+    if (flag === "1" && !forceShow) {
       setDismissed(true);
       // Mark body as dismissed for styling
       document.body.classList.add('popup-dismissed');
