@@ -53,9 +53,12 @@ const WizardModal = () => {
     step5Phone: ""
   });
   useEffect(() => {
-    // Check for reset/force show parameter
+    // Check for reset/force show parameter from URL or parent config
     const urlParams = new URLSearchParams(window.location.search);
-    const forceShow = urlParams.get('forceShow') === 'true' || urlParams.get('reset') === 'true';
+    const urlForceShow = urlParams.get('forceShow') === 'true' || urlParams.get('reset') === 'true';
+    const config = window.rockPopupConfig || {};
+    const configForceShow = (config as any).forceShow === true || (config as any).reset === true;
+    const forceShow = urlForceShow || configForceShow;
     
     // If force show parameter is present, clear dismissed state
     if (forceShow) {
@@ -288,7 +291,7 @@ const WizardModal = () => {
   if (dismissed || !open) {
     return null;
   }
-  return <Dialog open={open} onOpenChange={() => {}}>
+  return <Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleClose()}>
       <DialogContent className={`${currentStep === 6 ? 'max-w-full w-[95vw] h-[95vh]' : 'max-w-[800px] h-[90vh] sm:h-[500px]'} p-0 gap-0 bg-background border-0 overflow-hidden`}>
         <DialogTitle className="sr-only">Rock Academy Information Wizard</DialogTitle>
         <DialogDescription className="sr-only">

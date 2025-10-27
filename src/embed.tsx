@@ -5,7 +5,13 @@ import './index.css';
 import { initializeGA4 } from './utils/analytics';
 
 // Function to get client_id and config from multiple sources
-const getClientIdAndConfig = (): { clientId?: string; pageLocation?: string; origin?: string } => {
+const getClientIdAndConfig = (): { 
+  clientId?: string; 
+  pageLocation?: string; 
+  origin?: string;
+  forceShow?: boolean;
+  reset?: boolean;
+} => {
   // 1. Check URL parameters (primary method)
   const urlParams = new URLSearchParams(window.location.search);
   const urlClientId = urlParams.get('client_id') || urlParams.get('clientId');
@@ -16,11 +22,15 @@ const getClientIdAndConfig = (): { clientId?: string; pageLocation?: string; ori
   const configClientId = window.rockPopupConfig?.clientId;
   const configPageLocation = window.rockPopupConfig?.pageLocation;
   const configOrigin = window.rockPopupConfig?.origin;
+  const configForceShow = window.rockPopupConfig?.forceShow;
+  const configReset = window.rockPopupConfig?.reset;
 
   return {
     clientId: urlClientId || configClientId,
     pageLocation: urlPageLocation || configPageLocation,
     origin: urlOrigin || configOrigin,
+    forceShow: configForceShow,
+    reset: configReset,
   };
 };
 
@@ -60,6 +70,8 @@ window.rockPopupConfig = {
   clientId: config.clientId,
   pageLocation: config.pageLocation,
   origin: config.origin,
+  forceShow: config.forceShow,
+  reset: config.reset,
 };
 
 // Initialize GA4 with client_id from main site

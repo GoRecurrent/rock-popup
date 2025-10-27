@@ -43,7 +43,9 @@ This method allows you to deploy the popup via GTM without touching your site co
         // Set popup configuration
         window.rockPopupConfig = {
           clientId: clientId,
-          pageLocation: window.location.href
+          pageLocation: window.location.href,
+          // Optional: Set to true to force show popup even if previously dismissed
+          // forceShow: true
         };
         
         // Load popup styles
@@ -105,7 +107,9 @@ Add this script **before** loading the popup bundle. This passes your GA4 client
   // Configure the popup with your GA4 client_id
   window.rockPopupConfig = {
     clientId: 'YOUR_GA4_CLIENT_ID_HERE', // Get from your GA4 instance
-    pageLocation: window.location.href
+    pageLocation: window.location.href,
+    // Optional: Set to true to force show popup even if previously dismissed
+    // forceShow: true
   };
 </script>
 ```
@@ -132,7 +136,9 @@ To get the client_id from your parent page's GA4 instance:
   window.gtag('get', 'YOUR_GA4_MEASUREMENT_ID', 'client_id', function(clientId) {
     window.rockPopupConfig = {
       clientId: clientId,
-      pageLocation: window.location.href
+      pageLocation: window.location.href,
+      // Optional: Set to true to force show popup even if previously dismissed
+      // forceShow: true
     };
     
     // Load the popup script after config is set

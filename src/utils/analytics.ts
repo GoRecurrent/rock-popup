@@ -6,6 +6,8 @@ declare global {
       clientId?: string;
       pageLocation?: string;
       origin?: string;
+      forceShow?: boolean;
+      reset?: boolean;
     };
   }
 }
