@@ -15,6 +15,7 @@ import {
   trackPopupStep, 
   trackGenerateLead 
 } from "@/utils/analytics";
+import { notifyParentToClose } from "@/utils/parentMessaging";
 
 const DISMISSED_KEY = "rockPopupDismissed";
 export interface WizardFormData {
@@ -66,6 +67,9 @@ const WizardModal = () => {
     localStorage.setItem(DISMISSED_KEY, "1");
     setDismissed(true);
     setOpen(false);
+    
+    // Notify parent window to remove iframe (if embedded)
+    notifyParentToClose();
   };
   const handleUserInteraction = () => {
     if (!hasInteracted) {

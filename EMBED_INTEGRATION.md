@@ -143,20 +143,86 @@ To get the client_id from your parent page's GA4 instance:
 </script>
 ```
 
-## Option 2: Iframe Embed with URL Parameters
+## Iframe Embed (Recommended for GTM)
 
-Embed as an iframe with client_id passed via URL:
+The iframe approach is CORS-safe and works across domains. The popup automatically communicates with the parent to close itself when the user clicks the close button.
+
+### GTM Iframe Implementation
+
+Add this Custom HTML tag in GTM:
 
 ```html
-<iframe 
-  id="rockPopupIframe"
-  src="https://rock-popup.lovable.app/?client_id=YOUR_CLIENT_ID&origin=https%3A%2F%2Fwww.therockacademy.org" 
-  style="position: fixed; bottom: 0; right: 0; width: 100%; height: 100%; border: none; z-index: 9999;"
-  allow="clipboard-write">
-</iframe>
+<script>
+(function() {
+  // Prevent multiple loads
+  if (window.rockPopupIframeLoaded) return;
+  window.rockPopupIframeLoaded = true;
+
+  // Replace with your GA4 Measurement ID
+  var GA4_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+  
+  // Get client_id from GA4
+  if (window.gtag) {
+    window.gtag('get', GA4_MEASUREMENT_ID, 'client_id', function(clientId) {
+      // Build iframe URL with client_id and origin
+      var iframeSrc = 'https://rock-popup.lovable.app/?client_id=' + 
+                      encodeURIComponent(clientId) + 
+                      '&origin=' + encodeURIComponent(window.location.origin);
+      
+      // Create iframe
+      var iframe = document.createElement('iframe');
+      iframe.id = 'rockPopupIframe';
+      iframe.src = iframeSrc;
+      iframe.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;border:none;z-index:999999;pointer-events:none;';
+      iframe.setAttribute('allow', 'clipboard-write');
+      
+      // Enable pointer events when iframe loads
+      iframe.onload = function() {
+        iframe.style.pointerEvents = 'auto';
+      };
+      
+      document.body.appendChild(iframe);
+      
+      // Listen for close message from popup
+      window.addEventListener('message', function(event) {
+        if (event.origin === 'https://rock-popup.lovable.app' && 
+            event.data.type === 'closePopup') {
+          var iframe = document.getElementById('rockPopupIframe');
+          if (iframe) {
+            iframe.remove();
+          }
+        }
+      });
+    });
+  }
+})();
+</script>
 ```
 
-## Option 3: Iframe with postMessage
+**Configuration:**
+- Replace `G-XXXXXXXXXX` with your main site's GA4 Measurement ID
+- Set trigger to fire on desired pages (e.g., All Pages)
+- The popup will automatically:
+  - Receive the client_id for GA4 attribution
+  - Track all events to your GA4 property
+  - Send a `closePopup` message when user closes it
+  - Be removed from the DOM by the parent page
+
+### Close Button Communication
+
+The popup automatically sends a postMessage to the parent window when closed:
+
+```javascript
+// Message structure sent from popup to parent
+{
+  type: 'closePopup',
+  timestamp: '2025-01-15T10:30:00.000Z'
+}
+```
+
+The parent page's GTM script listens for this message and removes the iframe from the DOM.
+
+## Option 2: Direct Iframe Embed (Manual)
 
 For dynamic client_id updates, use postMessage:
 
