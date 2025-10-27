@@ -292,7 +292,7 @@ const WizardModal = () => {
     return null;
   }
   return <Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleClose()}>
-      <DialogContent className={`${currentStep === 6 ? 'max-w-full w-[95vw] h-[95vh]' : 'max-w-[800px] h-[90vh] sm:h-[500px]'} p-0 gap-0 bg-background border-0 overflow-hidden`}>
+      <DialogContent className={`${currentStep === 6 ? 'max-w-full w-screen sm:w-[95vw] h-screen sm:h-[95vh]' : 'w-screen sm:max-w-[800px] h-screen sm:h-[500px]'} p-0 gap-0 bg-background border-0 overflow-hidden`}>
         <DialogTitle className="sr-only">Rock Academy Information Wizard</DialogTitle>
         <DialogDescription className="sr-only">
           Multi-step form to help determine if Rock Academy is right for your family
