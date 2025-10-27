@@ -27,6 +27,15 @@
   </head>
 
   <body>
+    <!-- Prevent white flash in iframe by setting transparent background immediately -->
+    <script>
+      (function() {
+        if (window.self !== window.top) {
+          document.body.style.backgroundColor = 'transparent';
+          document.body.classList.add('iframe-mode');
+        }
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
