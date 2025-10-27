@@ -2,6 +2,13 @@
 
 This guide explains how to embed the Rock Academy popup on your parent website with GA4 tracking.
 
+## Client ID Passing Methods
+
+The popup supports receiving client_id via three methods:
+1. **URL Parameters** - `?clientId=xxx&pageLocation=xxx`
+2. **postMessage API** - For iframe communication
+3. **Script Config** - `window.rockPopupConfig` object
+
 ## Option 1: Direct Script Embed (Recommended)
 
 This method loads the popup directly into your parent page as a React component.
@@ -53,16 +60,42 @@ To get the client_id from your parent page's GA4 instance:
 </script>
 ```
 
-## Option 2: Iframe Embed
+## Option 2: Iframe Embed with URL Parameters
 
-If you prefer isolation, you can embed as an iframe:
+Embed as an iframe with client_id passed via URL:
 
 ```html
 <iframe 
+  id="rockPopupIframe"
   src="https://your-popup-domain.com/?clientId=YOUR_CLIENT_ID&pageLocation=YOUR_PAGE" 
   style="position: fixed; bottom: 0; right: 0; width: 100%; height: 100%; border: none; z-index: 9999;"
   allow="clipboard-write">
 </iframe>
+```
+
+## Option 3: Iframe with postMessage
+
+For dynamic client_id updates, use postMessage:
+
+```html
+<iframe 
+  id="rockPopupIframe"
+  src="https://your-popup-domain.com/" 
+  style="position: fixed; bottom: 0; right: 0; width: 100%; height: 100%; border: none; z-index: 9999;"
+  allow="clipboard-write">
+</iframe>
+
+<script>
+  // Get GA4 client_id and send to iframe
+  window.gtag('get', 'YOUR_GA4_MEASUREMENT_ID', 'client_id', function(clientId) {
+    const iframe = document.getElementById('rockPopupIframe');
+    iframe.contentWindow.postMessage({
+      type: 'rockPopupConfig',
+      clientId: clientId,
+      pageLocation: window.location.href
+    }, 'https://your-popup-domain.com');
+  });
+</script>
 ```
 
 ## Building for Embed
