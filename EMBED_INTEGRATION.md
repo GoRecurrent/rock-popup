@@ -9,7 +9,79 @@ The popup supports receiving client_id via three methods:
 2. **postMessage API** - For iframe communication
 3. **Script Config** - `window.rockPopupConfig` object
 
-## Option 1: Direct Script Embed (Recommended)
+## Google Tag Manager (GTM) Integration (Recommended)
+
+This method allows you to deploy the popup via GTM without touching your site code.
+
+### Step 1: Create Custom HTML Tag in GTM
+
+1. Go to your GTM container
+2. Create a new **Custom HTML** tag
+3. Paste this code:
+
+```html
+<script>
+  // Function to get GA4 client_id and initialize popup
+  (function() {
+    // Replace with your GA4 Measurement ID
+    var GA4_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+    
+    // Get client_id from GA4
+    if (window.gtag) {
+      window.gtag('get', GA4_MEASUREMENT_ID, 'client_id', function(clientId) {
+        // Set popup configuration
+        window.rockPopupConfig = {
+          clientId: clientId,
+          pageLocation: window.location.href
+        };
+        
+        // Load popup styles
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://your-cdn.com/rock-popup.css';
+        document.head.appendChild(link);
+        
+        // Load popup script
+        var script = document.createElement('script');
+        script.src = 'https://your-cdn.com/rock-popup.umd.js';
+        document.body.appendChild(script);
+      });
+    } else {
+      console.warn('GA4 not available - popup will load without client_id');
+      // Load popup anyway
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://your-cdn.com/rock-popup.css';
+      document.head.appendChild(link);
+      
+      var script = document.createElement('script');
+      script.src = 'https://your-cdn.com/rock-popup.umd.js';
+      document.body.appendChild(script);
+    }
+  })();
+</script>
+```
+
+### Step 2: Configure Tag Firing
+
+Set the tag to fire on:
+- **Trigger Type**: Page View
+- **Trigger Condition**: All Pages (or specific pages where you want the popup)
+
+### Step 3: Update URLs
+
+Replace these placeholders in the code:
+- `G-XXXXXXXXXX` - Your GA4 Measurement ID
+- `https://your-cdn.com/rock-popup.css` - Your hosted CSS file URL
+- `https://your-cdn.com/rock-popup.umd.js` - Your hosted JS file URL
+
+### Step 4: Publish
+
+1. Submit your GTM container changes
+2. Test the popup appears on your site
+3. Verify GA4 events are firing in GA4 DebugView
+
+## Option 1: Direct Script Embed
 
 This method loads the popup directly into your parent page as a React component.
 
