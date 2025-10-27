@@ -64,6 +64,8 @@ const WizardModal = () => {
       setDismissed(true);
       // Mark body as dismissed for styling
       document.body.classList.add('popup-dismissed');
+      // Notify parent immediately to remove iframe since popup was already dismissed
+      notifyParentToClose();
     } else {
       setOpen(true);
       // Track popup display when it opens
