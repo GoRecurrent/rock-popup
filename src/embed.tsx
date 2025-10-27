@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
-import { initializeGA4 } from './utils/analytics';
 
 // Function to get client_id and config from multiple sources
 const getClientIdAndConfig = (): { 
@@ -58,9 +57,12 @@ window.addEventListener('message', (event) => {
       config.origin = newOrigin;
     }
 
-    // Reinitialize GA4 with new client_id
+    // Push updated client_id to dataLayer for GTM
     if (newClientId) {
-      initializeGA4(newClientId);
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        client_id: newClientId,
+      });
     }
   }
 });
@@ -74,9 +76,13 @@ window.rockPopupConfig = {
   reset: config.reset,
 };
 
-// Initialize GA4 with client_id from main site
-// Measurement ID: G-673KD4D1H5
-initializeGA4(config.clientId);
+// Push client_id to dataLayer for GTM to use
+if (config.clientId) {
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    client_id: config.clientId,
+  });
+}
 
 // Mount the app
 const rootElement = document.getElementById('root');

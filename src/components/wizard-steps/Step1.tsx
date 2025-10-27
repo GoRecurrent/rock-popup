@@ -3,7 +3,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 interface Step1Props {
   value: string;
   onChange: (value: string) => void;
-  onAutoAdvance?: () => void;
+  onAutoAdvance?: (selectedValue: string) => void;
 }
 const Step1 = ({
   value,
@@ -15,7 +15,7 @@ const Step1 = ({
     onChange(option);
     // Auto-advance after a short delay
     setTimeout(() => {
-      onAutoAdvance?.();
+      onAutoAdvance?.(option);
     }, 300);
   };
   return <div className="space-y-3">

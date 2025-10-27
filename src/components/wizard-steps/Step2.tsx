@@ -4,7 +4,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 interface Step2Props {
   value: string;
   onChange: (value: string) => void;
-  onAutoAdvance?: () => void;
+  onAutoAdvance?: (selectedValue: string) => void;
 }
 
 const Step2 = ({ value, onChange, onAutoAdvance }: Step2Props) => {
@@ -19,7 +19,7 @@ const Step2 = ({ value, onChange, onAutoAdvance }: Step2Props) => {
     onChange(option);
     // Auto-advance after a short delay
     setTimeout(() => {
-      onAutoAdvance?.();
+      onAutoAdvance?.(option);
     }, 300);
   };
 

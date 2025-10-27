@@ -214,8 +214,8 @@ const WizardModal = () => {
             updateFormData({ step1: value });
             handleUserInteraction();
           }} 
-          onAutoAdvance={() => {
-            trackPopupStep(1, formData.step1);
+          onAutoAdvance={(selectedValue) => {
+            trackPopupStep(1, selectedValue);
             handleNext();
           }} 
         />;
@@ -226,8 +226,8 @@ const WizardModal = () => {
             updateFormData({ step2: value });
             handleUserInteraction();
           }} 
-          onAutoAdvance={() => {
-            trackPopupStep(2, formData.step2);
+          onAutoAdvance={(selectedValue) => {
+            trackPopupStep(2, selectedValue);
             handleNext();
           }} 
         />;

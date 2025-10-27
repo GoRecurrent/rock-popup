@@ -1,7 +1,6 @@
 declare global {
   interface Window {
     dataLayer: any[];
-    gtag: (...args: any[]) => void;
     rockPopupConfig?: {
       clientId?: string;
       pageLocation?: string;
@@ -12,39 +11,19 @@ declare global {
   }
 }
 
-const GA4_MEASUREMENT_ID = 'G-673KD4D1H5';
-
-export const initializeGA4 = (clientId?: string) => {
+const trackEvent = (eventName: string, parameters?: Record<string, any>) => {
   if (typeof window === 'undefined') return;
 
-  // Initialize gtag if not already initialized
-  if (!window.gtag) {
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function() {
-      window.dataLayer.push(arguments);
-    };
-  }
-
-  window.gtag('js', new Date());
-
-  const config: any = {
-    send_page_view: false, // We'll manually track popup_display
+  // Initialize dataLayer if not already initialized by GTM
+  window.dataLayer = window.dataLayer || [];
+  
+  // Push event to dataLayer for GTM to handle
+  const eventData: Record<string, any> = {
+    event: eventName,
+    ...parameters,
   };
 
-  if (clientId) {
-    config.client_id = clientId;
-  }
-
-  window.gtag('config', GA4_MEASUREMENT_ID, config);
-};
-
-const trackEvent = (eventName: string, parameters?: Record<string, any>) => {
-  if (typeof window === 'undefined' || !window.gtag) {
-    console.warn('GA4 gtag not available');
-    return;
-  }
-
-  window.gtag('event', eventName, parameters);
+  window.dataLayer.push(eventData);
 };
 
 export const trackPopupDisplay = (pageLocation?: string) => {
