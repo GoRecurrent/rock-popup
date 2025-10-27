@@ -262,7 +262,7 @@ const WizardModal = () => {
         return null;
     }
   };
-  if (dismissed) {
+  if (dismissed || !open) {
     return null;
   }
   return <Dialog open={open} onOpenChange={() => {}}>
