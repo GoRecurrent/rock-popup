@@ -9,6 +9,13 @@ import Step4 from "./wizard-steps/Step4";
 import Step5 from "./wizard-steps/Step5";
 import Step6 from "./wizard-steps/Step6";
 import ThankYouPage from "./wizard-steps/ThankYouPage";
+import { 
+  trackPopupDisplay, 
+  trackPopupInteraction, 
+  trackPopupStep, 
+  trackGenerateLead 
+} from "@/utils/analytics";
+
 const DISMISSED_KEY = "rockPopupDismissed";
 export interface WizardFormData {
   step1: string;
@@ -30,6 +37,7 @@ const WizardModal = () => {
   const [requestId] = useState(() => crypto.randomUUID());
   const [webhookHtml, setWebhookHtml] = useState<string>("");
   const [webhookLoading, setWebhookLoading] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const [formData, setFormData] = useState<WizardFormData>({
     step1: "",
     step2: "",
@@ -49,6 +57,9 @@ const WizardModal = () => {
       setDismissed(true);
     } else {
       setOpen(true);
+      // Track popup display when it opens
+      const pageLocation = window.rockPopupConfig?.pageLocation || window.location.href;
+      trackPopupDisplay(pageLocation);
     }
   }, []);
   const handleClose = () => {
@@ -56,7 +67,16 @@ const WizardModal = () => {
     setDismissed(true);
     setOpen(false);
   };
+  const handleUserInteraction = () => {
+    if (!hasInteracted) {
+      setHasInteracted(true);
+      trackPopupInteraction();
+    }
+  };
+
   const handleNext = async () => {
+    handleUserInteraction();
+
     // If moving from step 4 to step 5, fire first webhook (fire and forget)
     if (currentStep === 4) {
       // Fire and forget webhook call with all data collected so far
@@ -82,6 +102,13 @@ const WizardModal = () => {
 
     // If moving from step 5 to step 6, advance immediately and call second webhook
     if (currentStep === 5) {
+      // Track generate_lead event
+      trackGenerateLead({
+        parentName: formData.step5ParentName,
+        email: formData.step5Email,
+        phone: formData.step5Phone,
+      });
+
       setCurrentStep(6);
       setWebhookLoading(true);
 
@@ -151,29 +178,80 @@ const WizardModal = () => {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <Step1 value={formData.step1} onChange={value => updateFormData({
-          step1: value
-        })} onAutoAdvance={handleNext} />;
+        return <Step1 
+          value={formData.step1} 
+          onChange={value => {
+            updateFormData({ step1: value });
+            handleUserInteraction();
+          }} 
+          onAutoAdvance={() => {
+            trackPopupStep(1, formData.step1);
+            handleNext();
+          }} 
+        />;
       case 2:
-        return <Step2 value={formData.step2} onChange={value => updateFormData({
-          step2: value
-        })} onAutoAdvance={handleNext} />;
+        return <Step2 
+          value={formData.step2} 
+          onChange={value => {
+            updateFormData({ step2: value });
+            handleUserInteraction();
+          }} 
+          onAutoAdvance={() => {
+            trackPopupStep(2, formData.step2);
+            handleNext();
+          }} 
+        />;
       case 3:
-        return <Step4 value={formData.step3} onChange={value => updateFormData({
-          step3: value
-        })} onAutoAdvance={handleNext} />;
+        return <Step4 
+          value={formData.step3} 
+          onChange={value => {
+            updateFormData({ step3: value });
+            handleUserInteraction();
+          }} 
+          onAutoAdvance={() => {
+            trackPopupStep(3, undefined, {
+              children_count: formData.step3.length,
+              grade_levels: formData.step3.map(c => c.gradeLevel),
+            });
+            handleNext();
+          }} 
+        />;
       case 4:
-        return <Step5 questions={formData.step4Questions} onQuestionsChange={value => updateFormData({
-          step4Questions: value
-        })} onAutoAdvance={handleNext} />;
+        return <Step5 
+          questions={formData.step4Questions} 
+          onQuestionsChange={value => {
+            updateFormData({ step4Questions: value });
+            handleUserInteraction();
+          }} 
+          onAutoAdvance={() => {
+            trackPopupStep(4, undefined, {
+              has_questions: formData.step4Questions.trim().length > 0,
+            });
+            handleNext();
+          }} 
+        />;
       case 5:
-        return <Step6 parentName={formData.step5ParentName} email={formData.step5Email} phone={formData.step5Phone} onParentNameChange={value => updateFormData({
-          step5ParentName: value
-        })} onEmailChange={value => updateFormData({
-          step5Email: value
-        })} onPhoneChange={value => updateFormData({
-          step5Phone: value
-        })} onAutoAdvance={handleNext} />;
+        return <Step6 
+          parentName={formData.step5ParentName} 
+          email={formData.step5Email} 
+          phone={formData.step5Phone} 
+          onParentNameChange={value => {
+            updateFormData({ step5ParentName: value });
+            handleUserInteraction();
+          }} 
+          onEmailChange={value => {
+            updateFormData({ step5Email: value });
+            handleUserInteraction();
+          }} 
+          onPhoneChange={value => {
+            updateFormData({ step5Phone: value });
+            handleUserInteraction();
+          }} 
+          onAutoAdvance={() => {
+            trackPopupStep(5);
+            handleNext();
+          }} 
+        />;
       case 6:
         return <ThankYouPage formData={formData} onClose={handleClose} webhookHtml={webhookHtml} webhookLoading={webhookLoading} />;
       default:

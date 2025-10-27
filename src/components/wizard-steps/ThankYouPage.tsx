@@ -1,19 +1,27 @@
+import { useEffect } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { WizardFormData } from "../WizardModal";
+import { trackPopupCompletion } from "@/utils/analytics";
+
 interface ThankYouPageProps {
   formData: WizardFormData;
   onClose: () => void;
   webhookHtml: string;
   webhookLoading: boolean;
 }
+
 const ThankYouPage = ({
   formData,
   onClose,
   webhookHtml,
   webhookLoading
 }: ThankYouPageProps) => {
+  useEffect(() => {
+    // Track completion when thank you page loads
+    trackPopupCompletion();
+  }, []);
   const getPersonalizedMessage = () => {
     const messages = [];
     if (formData.step1 === "High quality education") {
