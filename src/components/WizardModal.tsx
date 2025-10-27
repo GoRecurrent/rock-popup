@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import WizardProgress from "./WizardProgress";
 import Step1 from "./wizard-steps/Step1";
@@ -280,6 +280,11 @@ const WizardModal = () => {
   }
   return <Dialog open={open} onOpenChange={() => {}}>
       <DialogContent className={`${currentStep === 6 ? 'max-w-full w-[95vw] h-[95vh]' : 'max-w-[800px] h-[90vh] sm:h-[500px]'} p-0 gap-0 bg-background border-0 overflow-hidden`}>
+        <DialogTitle className="sr-only">Rock Academy Information Wizard</DialogTitle>
+        <DialogDescription className="sr-only">
+          Multi-step form to help determine if Rock Academy is right for your family
+        </DialogDescription>
+        
         <button onClick={handleClose} className="absolute right-4 top-4 z-50 rounded-sm bg-wizard-sidebar text-white p-1.5 transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
           <X className="h-5 w-5" />
           <span className="sr-only">Close</span>
