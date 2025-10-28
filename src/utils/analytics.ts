@@ -17,17 +17,17 @@ const trackEvent = (eventName: string, parameters?: Record<string, any>) => {
   if (typeof window === 'undefined') return;
 
   // Initialize dataLayer if not already initialized by GTM
-  window.dataLayer = window.dataLayer || [];
+  // window.dataLayer = window.dataLayer || [];
   
   // Push event to dataLayer for GTM to handle
-  const eventData: Record<string, any> = {
-    event: eventName,
-    ...parameters,
-  };
+  // const eventData: Record<string, any> = {
+  //   event: eventName,
+  //   ...parameters,
+  // };
 
-  window.dataLayer.push(eventData);
+  // window.dataLayer.push(eventData);
   
-  // Also send to parent window if in iframe
+  // Send to parent window if in iframe
   sendPopupEventToParent(eventName, parameters);
 };
 
