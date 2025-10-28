@@ -1,3 +1,5 @@
+import { sendPopupEventToParent } from './parentMessaging';
+
 declare global {
   interface Window {
     dataLayer: any[];
@@ -24,6 +26,9 @@ const trackEvent = (eventName: string, parameters?: Record<string, any>) => {
   };
 
   window.dataLayer.push(eventData);
+  
+  // Also send to parent window if in iframe
+  sendPopupEventToParent(eventName, parameters);
 };
 
 export const trackPopupDisplay = (pageLocation?: string) => {
