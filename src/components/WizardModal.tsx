@@ -16,6 +16,8 @@ import {
   trackGenerateLead 
 } from "@/utils/analytics";
 import { notifyParentToClose } from "@/utils/parentMessaging";
+import { validateFirstWebhook, validateSecondWebhook } from "@/utils/formValidation";
+import { useToast } from "@/hooks/use-toast";
 
 const DISMISSED_KEY = "rockPopupDismissed";
 export interface WizardFormData {
@@ -32,6 +34,7 @@ export interface WizardFormData {
   step5Phone: string;
 }
 const WizardModal = () => {
+  const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
@@ -109,21 +112,36 @@ const WizardModal = () => {
 
     // If moving from step 4 to step 5, fire first webhook (fire and forget)
     if (currentStep === 4) {
-      // Fire and forget webhook call with all data collected so far
-      fetch("https://hook.us1.make.com/14hua75v7nvfdt6zzg44ejdye4ke1uij", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
+      // Validate data before sending to webhook
+      try {
+        const validatedData = validateFirstWebhook({
           request_id: requestId,
           step1: formData.step1,
           step2: formData.step2,
           step3: formData.step3,
           step4ParentGuide: formData.step4ParentGuide,
           step4Questions: formData.step4Questions
-        })
-      }).catch(error => console.error("First webhook error:", error));
+        });
+
+        // Fire and forget webhook call with validated data
+        fetch("https://hook.us1.make.com/14hua75v7nvfdt6zzg44ejdye4ke1uij", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(validatedData)
+        }).catch(error => {
+          console.error("First webhook error");
+        });
+      } catch (error) {
+        // Validation failed - show error but allow progression
+        console.error("Validation error:", error);
+        toast({
+          title: "Validation Warning",
+          description: "Some form data may be invalid. Please check your entries.",
+          variant: "destructive"
+        });
+      }
 
       // Immediately advance to next step
       setCurrentStep(5);
@@ -132,35 +150,39 @@ const WizardModal = () => {
 
     // If moving from step 5 to step 6, advance immediately and call second webhook
     if (currentStep === 5) {
-      // Track generate_lead event
-      trackGenerateLead({
-        parentName: formData.step5ParentName,
-        email: formData.step5Email,
-        phone: formData.step5Phone,
-      });
-
       setCurrentStep(6);
       setWebhookLoading(true);
 
-      // Second webhook call with ALL form data
+      // Validate ALL form data before sending to webhook
       try {
+        const validatedData = validateSecondWebhook({
+          request_id: requestId,
+          step1: formData.step1,
+          step2: formData.step2,
+          step3: formData.step3,
+          step4ParentGuide: formData.step4ParentGuide,
+          step4Questions: formData.step4Questions,
+          step5ParentName: formData.step5ParentName,
+          step5Email: formData.step5Email,
+          step5Phone: formData.step5Phone
+        });
+
+        // Track generate_lead event after successful validation
+        trackGenerateLead({
+          parentName: validatedData.step5ParentName,
+          email: validatedData.step5Email,
+          phone: validatedData.step5Phone,
+        });
+
+        // Second webhook call with validated data
         const response = await fetch("https://hook.us1.make.com/lzemjgu6t8r4ea8zsmuvdot7ltqfdu1q", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({
-            request_id: requestId,
-            step1: formData.step1,
-            step2: formData.step2,
-            step3: formData.step3,
-            step4ParentGuide: formData.step4ParentGuide,
-            step4Questions: formData.step4Questions,
-            step5ParentName: formData.step5ParentName,
-            step5Email: formData.step5Email,
-            step5Phone: formData.step5Phone
-          })
+          body: JSON.stringify(validatedData)
         });
+        
         if (response.ok) {
           const html = await response.text();
           setWebhookHtml(html);
@@ -169,8 +191,13 @@ const WizardModal = () => {
           setWebhookHtml("");
         }
       } catch (error) {
-        console.error("Second webhook error:", error);
+        console.error("Validation or webhook error");
         setWebhookHtml("");
+        toast({
+          title: "Submission Error",
+          description: "There was an issue submitting your information. Please verify all fields are correct.",
+          variant: "destructive"
+        });
       } finally {
         setWebhookLoading(false);
       }
@@ -198,7 +225,7 @@ const WizardModal = () => {
       case 3:
         return formData.step3.length > 0 && formData.step3.every(child => child.name !== "" && child.gradeLevel !== "");
       case 4:
-        return formData.step4ParentGuide !== "";
+        return true; // step4Questions is optional
       case 5:
         return formData.step5ParentName !== "" && formData.step5Email !== "" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.step5Email) && formData.step5Phone.replace(/\D/g, "").length === 10;
       default:
