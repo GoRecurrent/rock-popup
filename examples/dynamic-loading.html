@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock Academy Popup - Dynamic Loading Example</title>
+  
+  <!-- Your existing head content -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .info-box {
+      background: #f0f0f0;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    .demo-controls {
+      background: #e8f4f8;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    button {
+      background: #0066cc;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #0052a3;
+    }
+    code {
+      background: #e0e0e0;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: monospace;
+    }
+    #status {
+      margin-top: 10px;
+      padding: 10px;
+      background: white;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Rock Academy Popup - Dynamic Loading</h1>
+  
+  <div class="info-box">
+    <h2>About This Example</h2>
+    <p>This example demonstrates advanced popup loading techniques:</p>
+    <ul>
+      <li><strong>Lazy Loading:</strong> Load popup only when needed (after delay, on scroll, on click)</li>
+      <li><strong>Automatic GA4 Integration:</strong> Dynamically retrieve GA4 client_id before loading</li>
+      <li><strong>Conditional Loading:</strong> Load based on user behavior or page conditions</li>
+      <li><strong>Single Page Apps:</strong> Load/unload popup dynamically in SPAs</li>
+    </ul>
+  </div>
+
+  <div class="demo-controls">
+    <h2>Demo Controls</h2>
+    <p>Try different loading methods:</p>
+    
+    <button onclick="loadPopupWithGA4()">
+      Load with GA4 Client ID
+    </button>
+    
+    <button onclick="loadPopupAfterDelay()">
+      Load After 3 Second Delay
+    </button>
+    
+    <button onclick="loadPopupOnScroll()">
+      Load On Scroll (Scroll Down)
+    </button>
+    
+    <button onclick="forceShowPopup()">
+      Force Show Popup (Testing)
+    </button>
+    
+    <button onclick="resetPopupData()">
+      Reset Popup Data
+    </button>
+    
+    <div id="status"></div>
+  </div>
+
+  <!-- Your existing page content -->
+  <h2>Your Page Content</h2>
+  <p>Scroll down to test scroll-triggered loading...</p>
+  
+  <div style="height: 1500px; background: linear-gradient(to bottom, #ffffff, #f0f0f0);">
+    <p style="padding: 20px;">More content here...</p>
+    <p style="padding: 20px;">Keep scrolling...</p>
+    <p style="padding: 20px;">Almost there...</p>
+  </div>
+
+  <!-- 
+    ====================================
+    DYNAMIC POPUP LOADER SCRIPT
+    ====================================
+  -->
+  <script>
+    /**
+     * Rock Academy Popup Dynamic Loader
+     * 
+     * This script provides various methods for loading the popup dynamically.
+     * Choose the method that best fits your use case.
+     */
+    
+    // ========== CONFIGURATION ==========
+    const POPUP_CONFIG = {
+      // Replace with your GA4 Measurement ID
+      ga4MeasurementId: 'G-XXXXXXXXXX',
+      
+      // Replace with your hosted file URLs
+      cssUrl: 'https://www.therockacademy.org/assets/rock-popup.css',
+      jsUrl: 'https://www.therockacademy.org/assets/rock-popup.umd.js',
+      
+      // Loading options
+      autoLoadOnScroll: false,    // Auto-load when user scrolls 50%
+      autoLoadAfterDelay: false,  // Auto-load after 5 seconds
+      scrollThreshold: 0.5        // 50% scroll threshold
+    };
+    // ===================================
+    
+    // Track if popup is already loaded
+    let popupLoaded = false;
+    
+    /**
+     * Core function to load popup files
+     */
+    function loadPopupFiles(config = {}) {
+      if (popupLoaded) {
+        updateStatus('Popup already loaded');
+        return;
+      }
+      
+      updateStatus('Loading popup...');
+      
+      // Set configuration
+      window.rockPopupConfig = {
+        clientId: config.clientId || undefined,
+        pageLocation: window.location.href,
+        origin: window.location.origin,
+        forceShow: config.forceShow || false,
+        reset: config.reset || false
+      };
+      
+      // Load CSS
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = POPUP_CONFIG.cssUrl;
+      link.onload = () => {
+        console.log('[Rock Popup] CSS loaded');
+      };
+      link.onerror = () => {
+        updateStatus('❌ Failed to load CSS', 'error');
+      };
+      document.head.appendChild(link);
+      
+      // Load JavaScript
+      const script = document.createElement('script');
+      script.src = POPUP_CONFIG.jsUrl;
+      script.onload = () => {
+        console.log('[Rock Popup] JavaScript loaded');
+        popupLoaded = true;
+        updateStatus('✅ Popup loaded successfully', 'success');
+      };
+      script.onerror = () => {
+        updateStatus('❌ Failed to load JavaScript', 'error');
+      };
+      document.body.appendChild(script);
+    }
+    
+    /**
+     * Method 1: Load with GA4 Client ID
+     */
+    function loadPopupWithGA4() {
+      if (!window.gtag) {
+        updateStatus('⚠️ GA4 not found, loading without client_id', 'warning');
+        loadPopupFiles();
+        return;
+      }
+      
+      updateStatus('Getting GA4 client_id...');
+      
+      window.gtag('get', POPUP_CONFIG.ga4MeasurementId, 'client_id', function(clientId) {
+        if (clientId) {
+          console.log('[Rock Popup] Got client_id:', clientId);
+          loadPopupFiles({ clientId });
+        } else {
+          updateStatus('⚠️ No client_id received, loading anyway', 'warning');
+          loadPopupFiles();
+        }
+      });
+    }
+    
+    /**
+     * Method 2: Load after delay
+     */
+    function loadPopupAfterDelay(delayMs = 3000) {
+      updateStatus(`Will load popup in ${delayMs / 1000} seconds...`);
+      
+      setTimeout(() => {
+        loadPopupWithGA4();
+      }, delayMs);
+    }
+    
+    /**
+     * Method 3: Load on scroll
+     */
+    function loadPopupOnScroll() {
+      const scrollThreshold = window.innerHeight * POPUP_CONFIG.scrollThreshold;
+      
+      updateStatus('Scroll down to load popup...');
+      
+      const handleScroll = () => {
+        if (window.scrollY > scrollThreshold && !popupLoaded) {
+          updateStatus('Scroll threshold reached, loading popup...');
+          loadPopupWithGA4();
+          window.removeEventListener('scroll', handleScroll);
+        }
+      };
+      
+      window.addEventListener('scroll', handleScroll);
+      
+      // Also track scroll position
+      window.addEventListener('scroll', () => {
+        const scrollPercent = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
+        document.getElementById('status').innerHTML = `Scrolled: ${scrollPercent}% (threshold: ${Math.round(POPUP_CONFIG.scrollThreshold * 100)}%)`;
+      });
+    }
+    
+    /**
+     * Method 4: Force show popup (for testing)
+     */
+    function forceShowPopup() {
+      loadPopupFiles({ 
+        forceShow: true,
+        clientId: 'test-client-id'
+      });
+    }
+    
+    /**
+     * Method 5: Reset all popup data
+     */
+    function resetPopupData() {
+      localStorage.removeItem('rockPopupDismissed');
+      localStorage.removeItem('rockPopupRateLimit');
+      updateStatus('✅ Popup data reset. Reload page to see popup again.', 'success');
+    }
+    
+    /**
+     * Update status display
+     */
+    function updateStatus(message, type = 'info') {
+      const status = document.getElementById('status');
+      status.innerHTML = message;
+      status.style.color = type === 'error' ? '#cc0000' : type === 'success' ? '#00aa00' : type === 'warning' ? '#ff8800' : '#000000';
+    }
+    
+    // ========== AUTO-LOAD OPTIONS ==========
+    
+    // Option: Auto-load on page load after delay
+    if (POPUP_CONFIG.autoLoadAfterDelay) {
+      window.addEventListener('DOMContentLoaded', () => {
+        loadPopupAfterDelay(5000);
+      });
+    }
+    
+    // Option: Auto-load on scroll
+    if (POPUP_CONFIG.autoLoadOnScroll) {
+      window.addEventListener('DOMContentLoaded', () => {
+        loadPopupOnScroll();
+      });
+    }
+  </script>
+  
+  <!-- Your existing Google Analytics 4 script -->
+  <!-- Make sure GA4 is loaded before attempting to get client_id -->
+  
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock Academy Popup - GTM Integration Example</title>
+  
+  <!-- Your existing head content -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .info-box {
+      background: #f0f0f0;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    code {
+      background: #e0e0e0;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1>Rock Academy Popup - GTM Integration</h1>
+  
+  <div class="info-box">
+    <h2>Setup Instructions</h2>
+    <p>To use this integration method:</p>
+    <ol>
+      <li>Open Google Tag Manager</li>
+      <li>Create a new <strong>Custom HTML</strong> tag</li>
+      <li>Copy the code from the <code>&lt;script&gt;</code> block below</li>
+      <li>Set trigger to <strong>All Pages</strong> (or specific pages)</li>
+      <li>Update these values:
+        <ul>
+          <li><code>GA4_MEASUREMENT_ID</code> - Your GA4 Measurement ID</li>
+          <li><code>link.href</code> - URL to your hosted rock-popup.css</li>
+          <li><code>script.src</code> - URL to your hosted rock-popup.umd.js</li>
+        </ul>
+      </li>
+      <li>Save and publish your GTM container</li>
+    </ol>
+  </div>
+
+  <!-- Your existing page content -->
+  <p>This is your regular page content. The popup will load via GTM.</p>
+  
+  <!-- 
+    ====================================
+    GTM CUSTOM HTML TAG CODE
+    Copy everything between these comments
+    ====================================
+  -->
+  <script>
+    /**
+     * Rock Academy Popup Loader for Google Tag Manager
+     * 
+     * This script should be added as a Custom HTML tag in GTM
+     * 
+     * Features:
+     * - Automatically gets GA4 client_id
+     * - Loads popup styles and script dynamically
+     * - Passes configuration to popup
+     * - Gracefully handles missing GA4
+     */
+    (function() {
+      // ========== CONFIGURATION ==========
+      // Replace with your GA4 Measurement ID
+      var GA4_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+      
+      // Replace with your hosted file URLs
+      var POPUP_CSS_URL = 'https://www.therockacademy.org/assets/rock-popup.css';
+      var POPUP_JS_URL = 'https://www.therockacademy.org/assets/rock-popup.umd.js';
+      
+      // Optional: Force show popup even if previously dismissed
+      var FORCE_SHOW = false;
+      
+      // Optional: Reset all localStorage data
+      var RESET_DATA = false;
+      // ===================================
+      
+      console.log('[Rock Popup] Initializing via GTM...');
+      
+      // Function to load popup files
+      function loadPopupFiles(clientId) {
+        console.log('[Rock Popup] Loading with client_id:', clientId || 'none');
+        
+        // Set configuration for popup
+        window.rockPopupConfig = {
+          clientId: clientId || undefined,
+          pageLocation: window.location.href,
+          origin: window.location.origin,
+          forceShow: FORCE_SHOW,
+          reset: RESET_DATA
+        };
+        
+        // Load CSS
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = POPUP_CSS_URL;
+        link.onload = function() {
+          console.log('[Rock Popup] CSS loaded successfully');
+        };
+        link.onerror = function() {
+          console.error('[Rock Popup] Failed to load CSS from:', POPUP_CSS_URL);
+        };
+        document.head.appendChild(link);
+        
+        // Load JavaScript
+        var script = document.createElement('script');
+        script.src = POPUP_JS_URL;
+        script.onload = function() {
+          console.log('[Rock Popup] JavaScript loaded successfully');
+        };
+        script.onerror = function() {
+          console.error('[Rock Popup] Failed to load JavaScript from:', POPUP_JS_URL);
+        };
+        document.body.appendChild(script);
+      }
+      
+      // Try to get GA4 client_id
+      if (window.gtag) {
+        console.log('[Rock Popup] GA4 detected, getting client_id...');
+        
+        try {
+          window.gtag('get', GA4_MEASUREMENT_ID, 'client_id', function(clientId) {
+            if (clientId) {
+              console.log('[Rock Popup] Got GA4 client_id');
+              loadPopupFiles(clientId);
+            } else {
+              console.warn('[Rock Popup] GA4 returned empty client_id');
+              loadPopupFiles(null);
+            }
+          });
+        } catch (error) {
+          console.error('[Rock Popup] Error getting client_id:', error);
+          loadPopupFiles(null);
+        }
+      } else {
+        console.warn('[Rock Popup] GA4 not available, loading without client_id');
+        loadPopupFiles(null);
+      }
+    })();
+  </script>
+  <!-- 
+    ====================================
+    END GTM CUSTOM HTML TAG CODE
+    ====================================
+  -->
+
+  <!-- Your existing Google Analytics 4 tag should already be loaded via GTM -->
+  
+</body>
+</html>
