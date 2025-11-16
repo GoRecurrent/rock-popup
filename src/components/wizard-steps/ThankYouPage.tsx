@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { WizardFormData } from "../WizardModal";
 import { trackPopupCompletion } from "@/utils/analytics";
+import DOMPurify from "dompurify";
 
 interface ThankYouPageProps {
   formData: WizardFormData;
@@ -74,7 +75,7 @@ const ThankYouPage = ({
           <div 
             className="w-full max-w-[800px] mx-auto mb-8 text-left overflow-y-auto max-h-[60vh] pb-[30px] text-xl text-muted-foreground [&_a]:underline [&_a]:text-primary [&_strong]:text-[#181818] [&_p]:pb-[15px]"
             style={{ fontFamily: 'inherit' }}
-            dangerouslySetInnerHTML={{ __html: webhookHtml }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(webhookHtml) }}
           />
         ) : messages.length > 0 ? (
           <div className="bg-accent/10 border border-accent/20 rounded-lg p-6 mb-8 w-full text-left space-y-4">
