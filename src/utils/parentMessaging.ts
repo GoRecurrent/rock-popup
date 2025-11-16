@@ -6,15 +6,30 @@
 /**
  * Allowlist of trusted parent origins
  * Only these domains can receive sensitive user data via postMessage
+ * 
+ * Can be configured via VITE_ALLOWED_ORIGINS environment variable (comma-separated)
+ * Example: VITE_ALLOWED_ORIGINS=https://example.com,https://www.example.com
  */
-const ALLOWED_ORIGINS = [
-  'https://www.therockacademy.org',
-  // Development environments
-  'http://localhost:3000',
-  'http://localhost:5173',
-  'http://127.0.0.1:3000',
-  'http://127.0.0.1:5173',
-];
+const getDefaultOrigins = (): string[] => {
+  const envOrigins = import.meta.env.VITE_ALLOWED_ORIGINS;
+  
+  if (envOrigins && typeof envOrigins === 'string') {
+    // Parse comma-separated list from environment variable
+    return envOrigins.split(',').map(origin => origin.trim()).filter(Boolean);
+  }
+  
+  // Fallback to default production and development origins
+  return [
+    'https://www.therockacademy.org',
+    // Development environments
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:5173',
+  ];
+};
+
+const ALLOWED_ORIGINS = getDefaultOrigins();
 
 /**
  * Validates that the configured origin is in the allowlist
