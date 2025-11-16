@@ -18,6 +18,8 @@ import {
 import { notifyParentToClose } from "@/utils/parentMessaging";
 import { validateFirstWebhook, validateSecondWebhook } from "@/utils/formValidation";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { checkClientRateLimit } from "@/utils/rateLimiting";
 
 const DISMISSED_KEY = "rockPopupDismissed";
 export interface WizardFormData {
@@ -112,6 +114,17 @@ const WizardModal = () => {
 
     // If moving from step 4 to step 5, fire first webhook (fire and forget)
     if (currentStep === 4) {
+      // Check client-side rate limiting
+      const rateLimitCheck = checkClientRateLimit();
+      if (!rateLimitCheck.allowed) {
+        toast({
+          title: "Please Slow Down",
+          description: `You're submitting too quickly. Please wait ${rateLimitCheck.waitTime} seconds.`,
+          variant: "destructive"
+        });
+        return;
+      }
+
       // Validate data before sending to webhook
       try {
         const validatedData = validateFirstWebhook({
@@ -123,13 +136,12 @@ const WizardModal = () => {
           step4Questions: formData.step4Questions
         });
 
-        // Fire and forget webhook call with validated data
-        fetch("https://hook.us1.make.com/14hua75v7nvfdt6zzg44ejdye4ke1uij", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(validatedData)
+        // Call edge function instead of direct webhook
+        supabase.functions.invoke('submit-form', {
+          body: {
+            step: 'first',
+            formData: validatedData
+          }
         }).catch(error => {
           console.error("First webhook error");
         });
@@ -150,6 +162,17 @@ const WizardModal = () => {
 
     // If moving from step 5 to step 6, advance immediately and call second webhook
     if (currentStep === 5) {
+      // Check client-side rate limiting
+      const rateLimitCheck = checkClientRateLimit();
+      if (!rateLimitCheck.allowed) {
+        toast({
+          title: "Please Slow Down",
+          description: `You're submitting too quickly. Please wait ${rateLimitCheck.waitTime} seconds.`,
+          variant: "destructive"
+        });
+        return;
+      }
+
       setCurrentStep(6);
       setWebhookLoading(true);
 
@@ -174,24 +197,29 @@ const WizardModal = () => {
           phone: validatedData.step5Phone,
         });
 
-        // Second webhook call with validated data
-        const response = await fetch("https://hook.us1.make.com/lzemjgu6t8r4ea8zsmuvdot7ltqfdu1q", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(validatedData)
+        // Call edge function instead of direct webhook
+        const { data, error } = await supabase.functions.invoke('submit-form', {
+          body: {
+            step: 'second',
+            formData: validatedData
+          }
         });
         
-        if (response.ok) {
-          const html = await response.text();
-          setWebhookHtml(html);
+        if (error) {
+          console.error("Edge function error:", error);
+          setWebhookHtml("");
+          toast({
+            title: "Submission Error",
+            description: "There was an issue submitting your information. Please try again.",
+            variant: "destructive"
+          });
+        } else if (data?.success && data?.html) {
+          setWebhookHtml(data.html);
         } else {
-          // 400 or other error - leave webhookHtml empty to show fallback
           setWebhookHtml("");
         }
       } catch (error) {
-        console.error("Validation or webhook error");
+        console.error("Validation or webhook error:", error);
         setWebhookHtml("");
         toast({
           title: "Submission Error",
