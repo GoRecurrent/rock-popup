@@ -509,6 +509,7 @@ export type Database = {
           file: string
           id: string
           name: string
+          project: string | null
           status: string
           type: string | null
         }
@@ -517,6 +518,7 @@ export type Database = {
           file: string
           id?: string
           name: string
+          project?: string | null
           status: string
           type?: string | null
         }
@@ -525,6 +527,7 @@ export type Database = {
           file?: string
           id?: string
           name?: string
+          project?: string | null
           status?: string
           type?: string | null
         }
@@ -539,10 +542,7 @@ export type Database = {
         Args: { project_id: string }
         Returns: boolean
       }
-      generate_slug: {
-        Args: { title: string }
-        Returns: string
-      }
+      generate_slug: { Args: { title: string }; Returns: string }
       soft_delete_waste_water_sop: {
         Args: { sop_id: string }
         Returns: undefined
