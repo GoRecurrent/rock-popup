@@ -8,8 +8,7 @@
  * Only these domains can receive sensitive user data via postMessage
  */
 const ALLOWED_ORIGINS = [
-  'https://rockacademy.com',
-  'https://www.rockacademy.com',
+  'https://www.therockacademy.org',
   // Development environments
   'http://localhost:3000',
   'http://localhost:5173',
