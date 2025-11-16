@@ -20,6 +20,12 @@ import { validateFirstWebhook, validateSecondWebhook } from "@/utils/formValidat
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { checkClientRateLimit } from "@/utils/rateLimiting";
+import { 
+  createHoneypotFields, 
+  detectBot, 
+  prepareBotDetectionData,
+  type HoneypotFields 
+} from "@/utils/botDetection";
 
 const DISMISSED_KEY = "rockPopupDismissed";
 export interface WizardFormData {
@@ -44,6 +50,8 @@ const WizardModal = () => {
   const [webhookHtml, setWebhookHtml] = useState<string>("");
   const [webhookLoading, setWebhookLoading] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [formStartTime] = useState(() => Date.now());
+  const [honeypot, setHoneypot] = useState<HoneypotFields>(createHoneypotFields());
   const [formData, setFormData] = useState<WizardFormData>({
     step1: "",
     step2: "",
@@ -114,6 +122,18 @@ const WizardModal = () => {
 
     // If moving from step 4 to step 5, fire first webhook (fire and forget)
     if (currentStep === 4) {
+      // Check for bot behavior
+      const botCheck = detectBot(honeypot, formStartTime);
+      if (botCheck.isBot) {
+        console.warn("Bot detected:", botCheck.reason);
+        toast({
+          title: "Submission Error",
+          description: "Please try again or contact support if this persists.",
+          variant: "destructive"
+        });
+        return;
+      }
+
       // Check client-side rate limiting
       const rateLimitCheck = checkClientRateLimit();
       if (!rateLimitCheck.allowed) {
@@ -136,11 +156,14 @@ const WizardModal = () => {
           step4Questions: formData.step4Questions
         });
 
+        const botDetectionData = prepareBotDetectionData(honeypot, formStartTime);
+
         // Call edge function instead of direct webhook
         supabase.functions.invoke('submit-form', {
           body: {
             step: 'first',
-            formData: validatedData
+            formData: validatedData,
+            botDetection: botDetectionData
           }
         }).catch(error => {
           console.error("First webhook error");
@@ -162,6 +185,18 @@ const WizardModal = () => {
 
     // If moving from step 5 to step 6, advance immediately and call second webhook
     if (currentStep === 5) {
+      // Check for bot behavior
+      const botCheck = detectBot(honeypot, formStartTime);
+      if (botCheck.isBot) {
+        console.warn("Bot detected:", botCheck.reason);
+        toast({
+          title: "Submission Error",
+          description: "Please try again or contact support if this persists.",
+          variant: "destructive"
+        });
+        return;
+      }
+
       // Check client-side rate limiting
       const rateLimitCheck = checkClientRateLimit();
       if (!rateLimitCheck.allowed) {
@@ -197,11 +232,14 @@ const WizardModal = () => {
           phone: validatedData.step5Phone,
         });
 
+        const botDetectionData = prepareBotDetectionData(honeypot, formStartTime);
+
         // Call edge function instead of direct webhook
         const { data, error } = await supabase.functions.invoke('submit-form', {
           body: {
             step: 'second',
-            formData: validatedData
+            formData: validatedData,
+            botDetection: botDetectionData
           }
         });
         
@@ -378,6 +416,34 @@ const WizardModal = () => {
 
             <div className="flex-1 overflow-y-auto min-h-0">
               {currentStep === 6 ? renderStep() : <div className="p-4 sm:p-4 pt-2">{renderStep()}</div>}
+            </div>
+
+            {/* Honeypot fields - hidden from users but visible to bots */}
+            <div style={{ position: 'absolute', left: '-9999px', opacity: 0, pointerEvents: 'none' }} aria-hidden="true">
+              <input 
+                type="text" 
+                name="website" 
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot.website}
+                onChange={(e) => setHoneypot(prev => ({ ...prev, website: e.target.value }))}
+              />
+              <input 
+                type="text" 
+                name="company" 
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot.company}
+                onChange={(e) => setHoneypot(prev => ({ ...prev, company: e.target.value }))}
+              />
+              <input 
+                type="tel" 
+                name="phone_backup" 
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot.phone_backup}
+                onChange={(e) => setHoneypot(prev => ({ ...prev, phone_backup: e.target.value }))}
+              />
             </div>
           </div>
         </div>

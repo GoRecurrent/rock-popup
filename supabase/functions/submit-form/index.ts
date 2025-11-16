@@ -67,7 +67,7 @@ serve(async (req) => {
     }
 
     const body = await req.json();
-    const { step, formData } = body;
+    const { step, formData, botDetection } = body;
 
     if (!step || !formData) {
       return new Response(
@@ -77,6 +77,50 @@ serve(async (req) => {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
+    }
+
+    // Server-side bot detection
+    if (botDetection) {
+      const { honeypot, formStartTime } = botDetection;
+
+      // Check honeypot fields
+      if (honeypot?.website || honeypot?.company || honeypot?.phone_backup) {
+        console.warn('Bot detected: Honeypot field filled');
+        return new Response(
+          JSON.stringify({ error: 'Invalid submission' }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
+
+      // Check timing
+      const timeElapsed = Date.now() - formStartTime;
+      const MIN_FORM_TIME_MS = 10000; // 10 seconds
+      const MAX_FORM_TIME_MS = 1800000; // 30 minutes
+
+      if (timeElapsed < MIN_FORM_TIME_MS) {
+        console.warn('Bot detected: Form submitted too quickly');
+        return new Response(
+          JSON.stringify({ error: 'Invalid submission' }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
+
+      if (timeElapsed > MAX_FORM_TIME_MS) {
+        console.warn('Bot detected: Form open too long');
+        return new Response(
+          JSON.stringify({ error: 'Session expired' }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
     }
 
     console.log(`Processing form submission for step ${step}`);
