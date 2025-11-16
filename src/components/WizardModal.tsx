@@ -15,6 +15,7 @@ import {
   trackPopupStep, 
   trackGenerateLead 
 } from "@/utils/analytics";
+import { logError, logWarn } from "@/utils/logger";
 import { notifyParentToClose } from "@/utils/parentMessaging";
 import { validateFirstWebhook, validateSecondWebhook } from "@/utils/formValidation";
 import { useToast } from "@/hooks/use-toast";
@@ -125,7 +126,7 @@ const WizardModal = () => {
       // Check for bot behavior
       const botCheck = detectBot(honeypot, formStartTime);
       if (botCheck.isBot) {
-        console.warn("Bot detected:", botCheck.reason);
+        logWarn("Bot detected", botCheck.reason);
         toast({
           title: "Submission Error",
           description: "Please try again or contact support if this persists.",
@@ -166,11 +167,11 @@ const WizardModal = () => {
             botDetection: botDetectionData
           }
         }).catch(error => {
-          console.error("First webhook error");
+          logError("First webhook error", error);
         });
       } catch (error) {
         // Validation failed - show error but allow progression
-        console.error("Validation error:", error);
+        logError("Validation error", error);
         toast({
           title: "Validation Warning",
           description: "Some form data may be invalid. Please check your entries.",
@@ -188,7 +189,7 @@ const WizardModal = () => {
       // Check for bot behavior
       const botCheck = detectBot(honeypot, formStartTime);
       if (botCheck.isBot) {
-        console.warn("Bot detected:", botCheck.reason);
+        logWarn("Bot detected", botCheck.reason);
         toast({
           title: "Submission Error",
           description: "Please try again or contact support if this persists.",
@@ -244,7 +245,7 @@ const WizardModal = () => {
         });
         
         if (error) {
-          console.error("Edge function error:", error);
+          logError("Edge function error", error);
           setWebhookHtml("");
           toast({
             title: "Submission Error",
@@ -257,7 +258,7 @@ const WizardModal = () => {
           setWebhookHtml("");
         }
       } catch (error) {
-        console.error("Validation or webhook error:", error);
+        logError("Validation or webhook error", error);
         setWebhookHtml("");
         toast({
           title: "Submission Error",

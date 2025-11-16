@@ -211,7 +211,9 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('Error in submit-form function:', error);
+    // Safe error logging - only log error message, not full error object that may contain PII
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error in submit-form function:', errorMessage);
     return new Response(
       JSON.stringify({ error: 'Internal server error' }),
       {
