@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock Academy Popup - Direct HTML Integration Example</title>
+  
+  <!-- Your existing head content -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .info-box {
+      background: #f0f0f0;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    code {
+      background: #e0e0e0;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1>Rock Academy Popup - Direct HTML Integration</h1>
+  
+  <div class="info-box">
+    <h2>Setup Instructions</h2>
+    <p>To use this integration method:</p>
+    <ol>
+      <li>Add the configuration script before <code>&lt;/body&gt;</code></li>
+      <li>Update the <code>clientId</code> with your GA4 client ID</li>
+      <li>Update the CSS and JS URLs to point to your hosted files</li>
+      <li>Test the popup appears on page load</li>
+    </ol>
+    
+    <h3>Getting GA4 Client ID</h3>
+    <p>To get the GA4 client_id dynamically, see the <code>dynamic-loading.html</code> example.</p>
+    <p>Or use GTM integration for automatic client_id retrieval.</p>
+  </div>
+
+  <!-- Your existing page content -->
+  <h2>Your Page Content</h2>
+  <p>This is your regular website content. The popup will appear based on the configured behavior.</p>
+  
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+  <!-- 
+    ====================================
+    ROCK ACADEMY POPUP INTEGRATION
+    Add this before </body> tag
+    ====================================
+  -->
+  
+  <!-- Step 1: Configure the popup -->
+  <script>
+    /**
+     * Rock Academy Popup Configuration
+     * 
+     * Set this BEFORE loading the popup bundle.
+     * All parameters are optional but clientId is recommended for analytics.
+     */
+    window.rockPopupConfig = {
+      // GA4 client ID for proper analytics attribution
+      // Get this from your GA4 instance
+      clientId: 'YOUR_GA4_CLIENT_ID_HERE',
+      
+      // Current page URL (auto-detected if not provided)
+      pageLocation: window.location.href,
+      
+      // Origin domain (auto-detected if not provided)
+      origin: window.location.origin,
+      
+      // Optional: Force show popup even if previously dismissed
+      // Useful for testing
+      // forceShow: true,
+      
+      // Optional: Reset all localStorage data (dismissal state, rate limits)
+      // Useful for testing
+      // reset: true
+    };
+  </script>
+  
+  <!-- Step 2: Load popup styles -->
+  <link 
+    rel="stylesheet" 
+    href="https://www.therockacademy.org/assets/rock-popup.css"
+  >
+  
+  <!-- Step 3: Load popup script -->
+  <script 
+    src="https://www.therockacademy.org/assets/rock-popup.umd.js"
+  ></script>
+  
+  <!-- 
+    ====================================
+    END ROCK ACADEMY POPUP INTEGRATION
+    ====================================
+  -->
+
+  <!-- Optional: Your existing analytics scripts -->
+  <!-- Google Analytics 4 should be loaded before the popup for best client_id tracking -->
+  
+</body>
+</html>

@@ -62,12 +62,46 @@ This project is built with:
 
 ## How can I deploy this project?
 
+### Option 1: Deploy on Lovable (Easiest)
+
 Simply open [Lovable](https://lovable.dev/projects/7c2c5d10-ad70-4ef8-88b9-90b4dc9392a5) and click on Share -> Publish.
 
-## Can I connect a custom domain to my Lovable project?
+You can also connect a custom domain by navigating to Project > Settings > Domains and clicking Connect Domain.
 
-Yes, you can!
+Read more: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Option 2: Self-Host the Popup (Recommended for Your Domain)
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Build and host the popup on your own infrastructure to avoid iframe embedding issues:
+
+**Quick Start:**
+```bash
+# Build the library bundle
+./build-library.sh   # On macOS/Linux
+# or
+build-library.bat    # On Windows
+
+# This creates 3 files in dist/:
+# - rock-popup.umd.js
+# - rock-popup.es.js
+# - rock-popup.css
+```
+
+**Then:**
+1. Upload the 3 files to your web server (e.g., `/assets/` folder or CDN)
+2. Add integration code to your website (see examples/ folder)
+3. Choose integration method:
+   - **GTM** (recommended): `examples/gtm-integration.html`
+   - **Direct HTML**: `examples/direct-html-integration.html`
+   - **Dynamic Loading**: `examples/dynamic-loading.html`
+
+**Full Documentation:**
+- See `SELF_HOSTING_GUIDE.md` for complete setup instructions
+- See `examples/README.md` for integration examples
+- All Supabase edge functions and secrets continue to work!
+
+**Benefits:**
+- ✅ No iframe embedding (avoids malware warnings)
+- ✅ Same domain = no cross-origin issues
+- ✅ Full functionality maintained
+- ✅ Edge functions and secrets work unchanged
