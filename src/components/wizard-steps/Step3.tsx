@@ -59,7 +59,11 @@ const Step3 = ({ value, onChange }: Step3Props) => {
             <ChevronDown className="h-4 w-4 opacity-50 flex-shrink-0 ml-2" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-full p-0" style={{ zIndex: 10000 }}>
+        <PopoverContent 
+          className="w-full p-0 bg-background" 
+          style={{ zIndex: 999999, position: 'relative' }}
+          sideOffset={5}
+        >
           <div className="max-h-[320px] overflow-y-auto p-4">
             <div className="grid grid-cols-1 gap-2">
               {options.map((option) => (
