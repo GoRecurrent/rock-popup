@@ -2,7 +2,6 @@ import { sendPopupEventToParent } from './parentMessaging';
 
 declare global {
   interface Window {
-    dataLayer: any[];
     rockPopupConfig?: {
       clientId?: string;
       pageLocation?: string;
@@ -15,17 +14,6 @@ declare global {
 
 const trackEvent = (eventName: string, parameters?: Record<string, any>) => {
   if (typeof window === 'undefined') return;
-
-  // Initialize dataLayer if not already initialized by GTM
-  // window.dataLayer = window.dataLayer || [];
-  
-  // Push event to dataLayer for GTM to handle
-  // const eventData: Record<string, any> = {
-  //   event: eventName,
-  //   ...parameters,
-  // };
-
-  // window.dataLayer.push(eventData);
   
   // Send to parent window if in iframe
   sendPopupEventToParent(eventName, parameters);
