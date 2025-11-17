@@ -1,7 +1,7 @@
+import { useState, useRef, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ChevronDown } from "lucide-react";
 
 interface Step3Props {
@@ -10,6 +10,9 @@ interface Step3Props {
 }
 
 const Step3 = ({ value, onChange }: Step3Props) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   const options = [
     "Transitional Kindergarten",
     "Pre-K",
@@ -36,6 +39,23 @@ const Step3 = ({ value, onChange }: Step3Props) => {
     }
   };
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
     <div className="space-y-6">
       <div>
@@ -45,46 +65,49 @@ const Step3 = ({ value, onChange }: Step3Props) => {
         <p className="text-muted-foreground">Select all that apply.</p>
       </div>
 
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            className="w-full justify-between h-auto min-h-[40px] py-2"
-          >
-            <span className="text-left flex-1">
-              {value.length === 0
-                ? "Select grade levels..."
-                : `${value.length} grade level${value.length !== 1 ? "s" : ""} selected`}
-            </span>
-            <ChevronDown className="h-4 w-4 opacity-50 flex-shrink-0 ml-2" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent 
-          className="w-full p-0 bg-background" 
-          sideOffset={5}
+      <div className="relative" ref={dropdownRef}>
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full justify-between h-auto min-h-[40px] py-2"
+          onClick={() => setIsOpen(!isOpen)}
         >
-          <div className="max-h-[320px] overflow-y-auto p-4">
-            <div className="grid grid-cols-1 gap-2">
-              {options.map((option) => (
-                <div
-                  key={option}
-                  className="flex items-center space-x-2 p-3 rounded-lg border border-border hover:border-primary transition-colors cursor-pointer"
-                  onClick={() => handleToggle(option)}
-                >
-                  <Checkbox
-                    id={option}
-                    checked={value.includes(option)}
-                    onCheckedChange={() => handleToggle(option)}
-                  />
-                  <Label htmlFor={option} className="flex-1 cursor-pointer font-medium text-foreground text-sm">
-                    {option}
-                  </Label>
-                </div>
-              ))}
+          <span className="text-left flex-1">
+            {value.length === 0
+              ? "Select grade levels..."
+              : `${value.length} grade level${value.length !== 1 ? "s" : ""} selected`}
+          </span>
+          <ChevronDown className="h-4 w-4 opacity-50 flex-shrink-0 ml-2" />
+        </Button>
+
+        {isOpen && (
+          <div 
+            className="absolute top-full left-0 right-0 mt-2 bg-background border border-border rounded-md shadow-lg z-[9999]"
+            style={{ maxHeight: "320px", overflowY: "auto" }}
+          >
+            <div className="p-4">
+              <div className="grid grid-cols-1 gap-2">
+                {options.map((option) => (
+                  <div
+                    key={option}
+                    className="flex items-center space-x-2 p-3 rounded-lg border border-border hover:border-primary transition-colors cursor-pointer"
+                    onClick={() => handleToggle(option)}
+                  >
+                    <Checkbox
+                      id={option}
+                      checked={value.includes(option)}
+                      onCheckedChange={() => handleToggle(option)}
+                    />
+                    <Label htmlFor={option} className="flex-1 cursor-pointer font-medium text-foreground text-sm">
+                      {option}
+                    </Label>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </PopoverContent>
-      </Popover>
+        )}
+      </div>
     </div>
   );
 };
