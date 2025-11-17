@@ -290,12 +290,6 @@ The easiest way to add code to WordPress:
     console.error('RockPopup library failed to load');
   }
 </script>
-
-<!-- 
-  Note: The popup is designed to be fully isolated from your WordPress theme's CSS.
-  It uses CSS scoping and high z-index (9999) to prevent style conflicts.
-  If you experience any styling issues, please check the troubleshooting guide.
--->
 ```
 
 ### Step 3: Get Your GA4 Client ID (Important!)
@@ -479,13 +473,9 @@ git push origin main
 
 **Solutions:**
 1. **Check CSS file** - Verify `rock-popup.css` is loading (Network tab in DevTools)
-2. **WordPress theme conflicts** - The popup now uses CSS scoping to prevent conflicts. If you still see issues:
-   - Check if your theme has very high-specificity selectors
-   - Look for `!important` rules in your theme that might override
-   - The popup uses `z-index: 9999` and should appear above all content
+2. **Check for conflicts** - Your WordPress theme might override styles
 3. **Verify CSS URL** - Make sure the CSS file path is correct
 4. **Clear cache** - Hard refresh or clear WordPress cache
-5. **Check browser console** - Look for CSS loading errors
 
 ### Form Not Submitting
 
