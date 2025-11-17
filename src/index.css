@@ -18,6 +18,53 @@ All colors MUST be HSL.
 */
 
 @layer base {
+  /* CSS Reset and scoping for popup container */
+  .rock-popup-container {
+    all: initial;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 9999 !important;
+    pointer-events: none !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  }
+  
+  .rock-popup-container * {
+    box-sizing: border-box !important;
+  }
+  
+  .rock-popup-container *,
+  .rock-popup-container *::before,
+  .rock-popup-container *::after {
+    border-color: hsl(var(--border));
+  }
+
+  .rock-popup-container {
+    color: hsl(var(--foreground));
+  }
+  
+  /* When embedded in iframe, make background transparent by default */
+  body.iframe-mode .rock-popup-container {
+    background: transparent !important;
+  }
+  
+  /* When popup is dismissed, hide everything and disable interactions */
+  body.popup-dismissed .rock-popup-container {
+    display: none !important;
+    pointer-events: none !important;
+  }
+  
+  /* Ensure all dialog/modal elements have high z-index */
+  .rock-popup-container [role="dialog"],
+  .rock-popup-container [data-radix-dialog-overlay],
+  .rock-popup-container [data-radix-dialog-content] {
+    z-index: 10000 !important;
+  }
+  
+  .rock-popup-container [data-radix-toast-viewport],
+  .rock-popup-container [data-sonner-toaster] {
+    z-index: 10001 !important;
+  }
+  
   :root {
     --background: 0 0% 100%;
     --foreground: 215 25% 27%;
@@ -116,30 +163,5 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-  }
-  
-  /* When embedded in iframe, make background transparent by default */
-  body.iframe-mode {
-    @apply bg-transparent;
-  }
-  
-  /* When popup is dismissed, hide everything and disable interactions */
-  body.popup-dismissed {
-    @apply bg-transparent;
-    pointer-events: none !important;
-  }
-  
-  body.popup-dismissed * {
-    pointer-events: none !important;
   }
 }
