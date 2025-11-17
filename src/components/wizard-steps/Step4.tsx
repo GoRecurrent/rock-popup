@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
 
 interface Child {
   name: string;
@@ -17,6 +17,8 @@ interface Step4Props {
 
 const Step4 = ({ value, onChange, onAutoAdvance }: Step4Props) => {
   const [activeStudentIndex, setActiveStudentIndex] = useState(0);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const gradeLevels = [
     "Pre-K",
@@ -46,7 +48,27 @@ const Step4 = ({ value, onChange, onAutoAdvance }: Step4Props) => {
     const updated = [...value];
     updated[index][field] = fieldValue;
     onChange(updated);
+    if (field === "gradeLevel") {
+      setIsDropdownOpen(false);
+    }
   };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   const currentStudent = value[activeStudentIndex];
   const isCurrentValid = currentStudent?.name !== "" && currentStudent?.gradeLevel !== "";
@@ -98,21 +120,38 @@ const Step4 = ({ value, onChange, onAutoAdvance }: Step4Props) => {
             <Label htmlFor="grade-level" className="text-sm font-medium">
               Grade Level (2026-2027)
             </Label>
-            <Select
-              value={currentStudent?.gradeLevel || ""}
-              onValueChange={(val) => handleUpdateChild(activeStudentIndex, "gradeLevel", val)}
-            >
-              <SelectTrigger id="grade-level" className="h-10">
-                <SelectValue placeholder="Select grade level" />
-              </SelectTrigger>
-              <SelectContent className="bg-popover z-[9999] max-h-[300px]">
-                {gradeLevels.map((grade) => (
-                  <SelectItem key={grade} value={grade}>
-                    {grade}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="relative" ref={dropdownRef}>
+              <button
+                type="button"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <span className={currentStudent?.gradeLevel ? "" : "text-muted-foreground"}>
+                  {currentStudent?.gradeLevel || "Select grade level"}
+                </span>
+                <ChevronDown className="h-4 w-4 opacity-50" />
+              </button>
+              
+              {isDropdownOpen && (
+                <div 
+                  className="absolute top-full left-0 right-0 mt-2 bg-background border border-border rounded-md shadow-lg z-[9999]"
+                  style={{ maxHeight: "300px", overflowY: "auto" }}
+                >
+                  <div className="p-1">
+                    {gradeLevels.map((grade) => (
+                      <button
+                        key={grade}
+                        type="button"
+                        onClick={() => handleUpdateChild(activeStudentIndex, "gradeLevel", grade)}
+                        className="w-full text-left px-3 py-2 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground cursor-pointer"
+                      >
+                        {grade}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
