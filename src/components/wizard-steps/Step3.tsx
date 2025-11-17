@@ -34,7 +34,7 @@ const Step3 = ({ value, onChange }: Step3Props) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative" style={{ zIndex: 10002 }}>
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">
           What grade level(s) are you interested in?
@@ -42,12 +42,13 @@ const Step3 = ({ value, onChange }: Step3Props) => {
         <p className="text-muted-foreground">Select all that apply.</p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[320px] overflow-y-auto pr-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[320px] overflow-y-auto pr-2 relative" style={{ zIndex: 10003 }}>
         {options.map((option) => (
           <div
             key={option}
-            className="flex items-center space-x-2 p-3 rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
+            className="flex items-center space-x-2 p-3 rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer relative"
             onClick={() => handleToggle(option)}
+            style={{ zIndex: 10004 }}
           >
             <Checkbox
               id={option}
