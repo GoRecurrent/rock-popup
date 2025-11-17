@@ -105,7 +105,7 @@ const Step4 = ({ value, onChange, onAutoAdvance }: Step4Props) => {
               <SelectTrigger id="grade-level" className="h-10">
                 <SelectValue placeholder="Select grade level" />
               </SelectTrigger>
-              <SelectContent className="bg-popover z-50 max-h-[300px]">
+              <SelectContent className="bg-popover z-[9999] max-h-[300px]">
                 {gradeLevels.map((grade) => (
                   <SelectItem key={grade} value={grade}>
                     {grade}
