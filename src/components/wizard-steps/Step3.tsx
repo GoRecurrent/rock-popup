@@ -1,5 +1,8 @@
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ChevronDown } from "lucide-react";
 
 interface Step3Props {
   value: string[];
@@ -34,7 +37,7 @@ const Step3 = ({ value, onChange }: Step3Props) => {
   };
 
   return (
-    <div className="space-y-6 relative" style={{ zIndex: 10002 }}>
+    <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">
           What grade level(s) are you interested in?
@@ -42,25 +45,43 @@ const Step3 = ({ value, onChange }: Step3Props) => {
         <p className="text-muted-foreground">Select all that apply.</p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[320px] overflow-y-auto pr-2 relative" style={{ zIndex: 10003 }}>
-        {options.map((option) => (
-          <div
-            key={option}
-            className="flex items-center space-x-2 p-3 rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer relative"
-            onClick={() => handleToggle(option)}
-            style={{ zIndex: 10004 }}
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            className="w-full justify-between h-auto min-h-[40px] py-2"
           >
-            <Checkbox
-              id={option}
-              checked={value.includes(option)}
-              onCheckedChange={() => handleToggle(option)}
-            />
-            <Label htmlFor={option} className="flex-1 cursor-pointer font-medium text-foreground text-sm">
-              {option}
-            </Label>
+            <span className="text-left flex-1">
+              {value.length === 0
+                ? "Select grade levels..."
+                : `${value.length} grade level${value.length !== 1 ? "s" : ""} selected`}
+            </span>
+            <ChevronDown className="h-4 w-4 opacity-50 flex-shrink-0 ml-2" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-full p-0" style={{ zIndex: 10000 }}>
+          <div className="max-h-[320px] overflow-y-auto p-4">
+            <div className="grid grid-cols-1 gap-2">
+              {options.map((option) => (
+                <div
+                  key={option}
+                  className="flex items-center space-x-2 p-3 rounded-lg border border-border hover:border-primary transition-colors cursor-pointer"
+                  onClick={() => handleToggle(option)}
+                >
+                  <Checkbox
+                    id={option}
+                    checked={value.includes(option)}
+                    onCheckedChange={() => handleToggle(option)}
+                  />
+                  <Label htmlFor={option} className="flex-1 cursor-pointer font-medium text-foreground text-sm">
+                    {option}
+                  </Label>
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
-      </div>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 };
