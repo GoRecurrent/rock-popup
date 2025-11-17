@@ -56,14 +56,6 @@ window.addEventListener('message', (event) => {
     if (newOrigin) {
       config.origin = newOrigin;
     }
-
-    // Push updated client_id to dataLayer for GTM
-    if (newClientId) {
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
-        client_id: newClientId,
-      });
-    }
   }
 });
 
@@ -75,14 +67,6 @@ window.rockPopupConfig = {
   forceShow: config.forceShow,
   reset: config.reset,
 };
-
-// Push client_id to dataLayer for GTM to use
-if (config.clientId) {
-  window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({
-    client_id: config.clientId,
-  });
-}
 
 // Mount the app
 const rootElement = document.getElementById('root');
