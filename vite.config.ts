@@ -19,6 +19,9 @@ export default defineConfig(({ mode }) => {
       },
     },
     ...(isLibraryMode && {
+      define: {
+        'process.env.NODE_ENV': JSON.stringify('production'),
+      },
       build: {
         lib: {
           entry: path.resolve(__dirname, 'src/embed.tsx'),
