@@ -60,8 +60,7 @@ const Step3 = ({ value, onChange }: Step3Props) => {
           </Button>
         </PopoverTrigger>
         <PopoverContent 
-          className="w-full p-0 bg-background" 
-          style={{ zIndex: 999999, position: 'relative' }}
+          className="w-full p-0 bg-background z-[9999]" 
           sideOffset={5}
         >
           <div className="max-h-[320px] overflow-y-auto p-4">
