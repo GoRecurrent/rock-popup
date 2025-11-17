@@ -89,6 +89,19 @@ const rootElement = document.getElementById('root');
 if (!rootElement) {
   const newRoot = document.createElement('div');
   newRoot.id = 'root';
+  newRoot.className = 'rock-popup-container';
+  
+  // Add critical inline styles to ensure proper positioning and z-index
+  newRoot.style.cssText = `
+    position: fixed !important;
+    z-index: 9999 !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    pointer-events: none !important;
+  `;
+  
   document.body.appendChild(newRoot);
   ReactDOM.createRoot(newRoot).render(
     <React.StrictMode>
@@ -96,6 +109,19 @@ if (!rootElement) {
     </React.StrictMode>
   );
 } else {
+  rootElement.className = 'rock-popup-container';
+  
+  // Add critical inline styles to ensure proper positioning and z-index
+  rootElement.style.cssText = `
+    position: fixed !important;
+    z-index: 9999 !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    pointer-events: none !important;
+  `;
+  
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <App />
